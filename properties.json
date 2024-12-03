@@ -1,0 +1,8 @@
+{
+  "mainPackage": "com.smartverse.smartreportbackend",
+  "language": "JAVA",
+  "projectName": "smart-report-backend",
+  "entities": [],
+  "endpoints": [],
+  "enums": []
+}
