@@ -1,15 +1,18 @@
 package com.smartverse.smartreportbackend.config.interceptor;
 
 
+import com.potatotech.authorization.exception.ServiceException;
 import com.potatotech.authorization.security.Authenticate;
 import com.potatotech.authorization.tenant.TenantConfiguration;
 import com.potatotech.authorization.tenant.TenantContext;
+import com.smartverse.smartreportbackend.config.context.EnumConfigContext;
 import com.smartverse.smartreportbackend.config.migration.DBMigration;
 import feign.Request;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -42,15 +45,15 @@ public class InterceptorConfig extends Authenticate implements HandlerIntercepto
             tenant = "public";
         }
 
-//        if(!tenantConfiguration.validAnonymous(handler)){
-//            var user = this.isAuthenticated(auth);
-//            TenantContext.setCurrentTenant(user.getTenant());
-//        } else {
-//            if(tenant == null){
-//                throw new ServiceException(HttpStatus.FORBIDDEN,"tenant is required");
-//            }
-//            TenantContext.setCurrentTenant(tenant);
-//        }
+        if(!tenantConfiguration.validAnonymous(handler)){
+            var user = this.isAuthenticated(auth);
+            TenantContext.setCurrentTenant(user.getTenant());
+        } else {
+            if(tenant == null){
+                throw new ServiceException(HttpStatus.FORBIDDEN,"tenant is required");
+            }
+            TenantContext.setCurrentTenant(tenant);
+        }
 
         TenantContext.setCurrentTenant("public");
         dbMigration.loadMigrateTenants(tenant);
@@ -60,10 +63,10 @@ public class InterceptorConfig extends Authenticate implements HandlerIntercepto
     private boolean validateDomainsAllowAccess(String uri) {
 
         // valida swagger
-        if(uri.startsWith("/church-lite/swagger-ui/") || uri.startsWith("/church-lite/v3/")) {
+        if(uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/swagger-ui/") || uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/v3/")) {
             return true;
         } // valida login e register
-        else if(uri.startsWith("/church-lite/authenticate") || uri.startsWith("/church-lite/register") || uri.startsWith("/church-lite/verifyURL")) {
+        else if(uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/authenticate") || uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/register")) {
             TenantContext.setCurrentTenant("admin");
             dbMigration.loadMigrateTenants("admin");
             return true;
