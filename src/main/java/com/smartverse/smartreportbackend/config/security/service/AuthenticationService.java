@@ -10,10 +10,7 @@ import com.smartverse.smartreportbackend.config.security.model.UsersDTO;
 import com.smartverse.smartreportbackend.config.security.model.UsersEntity;
 import com.smartverse.smartreportbackend.config.security.repository.AuthenticationRepository;
 import com.smartverse.smartreportbackend.services.email.EmailService;
-import com.smartverse.smartreportbackend_gen.Language;
-import com.smartverse.smartreportbackend_gen.Theme;
-import com.smartverse.smartreportbackend_gen.UserConfigurationEntity;
-import com.smartverse.smartreportbackend_gen.UserConfigurationRepository;
+import com.smartverse.smartreportbackend_gen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class AuthenticationService {
@@ -29,7 +27,7 @@ public class AuthenticationService {
     AuthenticationRepository authenticationRepository;
 
     @Autowired
-    UserConfigurationRepository userConfigurationRepository;
+    UserConfirmationRepository userConfirmationRepository;
 
     @Autowired
     Authenticate authenticate;
@@ -87,15 +85,24 @@ public class AuthenticationService {
 
         user = authenticationRepository.save(user);
 
-        var userConfigurationEntity = new UserConfigurationEntity();
-        userConfigurationEntity.setEmail(user.getEmail());
-        userConfigurationEntity.setName(user.getName());
-        userConfigurationEntity.setLang(Language.PORTUGUESE);
-        userConfigurationEntity.setTheme(Theme.DARK);
-        userConfigurationEntity.setHash(user.getId());
 
-        userConfigurationRepository.save(userConfigurationEntity);
+        var userConfirmation = new UserConfirmationEntity();
+
+        userConfirmation.setUserId(user.getId());
+        userConfirmation.setHash(UUID.randomUUID().toString());
+        userConfirmation = userConfirmationRepository.save(userConfirmation);
+
+        var emailcontent = emailService.loadModel("register");
+        emailcontent = emailcontent.replace("{{url}}",String.format("http://localhost:4200/#/register-confirmation/%s",userConfirmation.getHash()));
+
+        try{
+            emailService.sendEmail(user.getEmail(),"Confirmação de email",emailcontent);
+        } catch (Exception e){
+            throw new ServiceException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
 
         return true;
+
+
     }
 }

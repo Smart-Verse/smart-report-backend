@@ -28,6 +28,9 @@ public class UserConfigurationService {
 
 
     public UserConfigurationDTO saveUserConfiguration(UUID hash) {
+        var oldTEnant = TenantContext.getCurrentTenant();
+        TenantContext.setCurrentTenant("admin");
+        tenantSchemaInterceptor.switchSchema();
 
         var user = authenticationRepository.findById(hash);
 
@@ -41,12 +44,18 @@ public class UserConfigurationService {
             userConfiguration.setTheme(Theme.LIGHT);
         });
 
+        TenantContext.setCurrentTenant(oldTEnant);
+        tenantSchemaInterceptor.switchSchema();
         userConfigurationRepository.save(userConfiguration);
 
         return userConfigurationDTOConverter.toDTO(userConfiguration, null);
     }
     @Transactional
     public void updateMaster(UserConfigurationEntity entity) {
+        var oldTEnant = TenantContext.getCurrentTenant();
+        TenantContext.setCurrentTenant("admin");
+        tenantSchemaInterceptor.switchSchema();
+
         var user = authenticationRepository.findById(entity.getHash());
 
         user.ifPresent(item -> {
