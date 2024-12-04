@@ -62,7 +62,7 @@ public class InterceptorConfig extends Authenticate implements HandlerIntercepto
         if(uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/swagger-ui/") || uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/v3/")) {
             return true;
         } // valida login e register
-        else if(uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/authenticate") || uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/register")) {
+        else if(uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/authenticate") || uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/register") || uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/verifyURL")) {
             TenantContext.setCurrentTenant("admin");
             dbMigration.loadMigrateTenants("admin");
             return true;
