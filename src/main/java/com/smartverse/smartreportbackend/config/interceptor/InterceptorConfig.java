@@ -40,23 +40,13 @@ public class InterceptorConfig extends Authenticate implements HandlerIntercepto
             return true;
         }
         var auth = request.getHeader(AUTHORIZATION);
-        var tenant = request.getHeader(TENANT);
-        if(tenant == null){
-            tenant = "public";
-        }
 
         if(!tenantConfiguration.validAnonymous(handler)){
-            var user = this.isAuthenticated(auth);
-            TenantContext.setCurrentTenant(user.getTenant());
-        } else {
-            if(tenant == null){
-                throw new ServiceException(HttpStatus.FORBIDDEN,"tenant is required");
-            }
-            TenantContext.setCurrentTenant(tenant);
+            this.isAuthenticated(auth);
         }
 
-        TenantContext.setCurrentTenant("public");
-        dbMigration.loadMigrateTenants(tenant);
+        TenantContext.setCurrentTenant("admin");
+        dbMigration.loadMigrateTenants("admin");
         return true;
     }
 

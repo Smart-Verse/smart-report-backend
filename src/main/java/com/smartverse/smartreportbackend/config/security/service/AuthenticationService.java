@@ -10,6 +10,10 @@ import com.smartverse.smartreportbackend.config.security.model.UsersDTO;
 import com.smartverse.smartreportbackend.config.security.model.UsersEntity;
 import com.smartverse.smartreportbackend.config.security.repository.AuthenticationRepository;
 import com.smartverse.smartreportbackend.services.email.EmailService;
+import com.smartverse.smartreportbackend_gen.Language;
+import com.smartverse.smartreportbackend_gen.Theme;
+import com.smartverse.smartreportbackend_gen.UserConfigurationEntity;
+import com.smartverse.smartreportbackend_gen.UserConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +27,9 @@ public class AuthenticationService {
 
     @Autowired
     AuthenticationRepository authenticationRepository;
+
+    @Autowired
+    UserConfigurationRepository userConfigurationRepository;
 
     @Autowired
     Authenticate authenticate;
@@ -80,8 +87,14 @@ public class AuthenticationService {
 
         user = authenticationRepository.save(user);
 
+        var userConfigurationEntity = new UserConfigurationEntity();
+        userConfigurationEntity.setEmail(user.getEmail());
+        userConfigurationEntity.setName(user.getName());
+        userConfigurationEntity.setLang(Language.PORTUGUESE);
+        userConfigurationEntity.setTheme(Theme.DARK);
+        userConfigurationEntity.setHash(user.getId());
 
-
+        userConfigurationRepository.save(userConfigurationEntity);
 
         return true;
     }
