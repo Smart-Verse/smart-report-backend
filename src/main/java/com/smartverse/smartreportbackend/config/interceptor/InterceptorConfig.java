@@ -67,7 +67,7 @@ public class InterceptorConfig extends Authenticate implements HandlerIntercepto
             dbMigration.loadMigrateTenants("admin");
             return true;
         }
-        else if(uri.startsWith("/church-lite/error")) {
+        else if(uri.startsWith("/"+System.getenv(EnumConfigContext.SERVICE_NAME.name())+"/error")) {
             return true;
         }
         else {
@@ -77,7 +77,7 @@ public class InterceptorConfig extends Authenticate implements HandlerIntercepto
 
 
     private boolean isOptions(HttpServletRequest request){
-        return Request.HttpMethod.OPTIONS.equals(request.getMethod());
+        return Request.HttpMethod.OPTIONS.name().equals(request.getMethod());
     }
 
     @Override

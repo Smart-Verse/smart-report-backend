@@ -1,6 +1,5 @@
 package com.smartverse.smartreportbackend.handlers.userconfiguration;
 
-
 import com.smartverse.smartreportbackend.repository.userconfiguration.UserConfigurationCustomRepository;
 import com.smartverse.smartreportbackend.services.userconfiguration.UserConfigurationService;
 import com.smartverse.smartreportbackend_gen.GetUser;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.UUID;
 

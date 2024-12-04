@@ -102,7 +102,5 @@ public class AuthenticationService {
         }
 
         return true;
-
-
     }
 }
