@@ -174,7 +174,30 @@
       "handlerAbstract": true
     }
   ],
-  "endpoints": [],
+  "endpoints": [
+    {
+      "methodName": "getUser",
+      "httpMethod": "GET",
+      "grouper": "",
+      "metadata": {
+        "anonymous": false,
+        "input": [
+          {
+            "parameterName": "hash",
+            "parameterType": "uuid",
+            "list": false
+          }
+        ],
+        "output": [
+          {
+            "parameterName": "output",
+            "parameterType": "userConfiguration",
+            "list": false
+          }
+        ]
+      }
+    }
+  ],
   "enums": [
     {
       "enumName": "theme",
