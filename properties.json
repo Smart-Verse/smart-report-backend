@@ -302,36 +302,6 @@
             "reference": "",
             "enableFieldsFilter": false
           }
-        },
-        {
-          "comment": "Relacionamento com report",
-          "fieldName": "report",
-          "list": true,
-          "fieldProperties": {
-            "fieldType": "report",
-            "required": false,
-            "valueDefault": ""
-          },
-          "metadata": {
-            "nullable": false,
-            "key": false
-          },
-          "relationShips": {
-            "fetchType": "LAZY",
-            "relationShip": "OneToMany",
-            "mappedBy": "",
-            "bidirectional": false,
-            "reference": false
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
         }
       ],
       "classExtends": ""
@@ -426,7 +396,7 @@
           },
           "relationShips": {
             "fetchType": "LAZY",
-            "relationShip": "ManyToOne",
+            "relationShip": "OneToOne",
             "mappedBy": "",
             "bidirectional": false,
             "reference": false
