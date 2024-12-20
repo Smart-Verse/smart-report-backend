@@ -368,7 +368,7 @@
             "valueDefault": ""
           },
           "metadata": {
-            "nullable": false,
+            "nullable": true,
             "key": false
           },
           "frontendProperties": {
