@@ -459,6 +459,48 @@
         ],
         "anonymous": true
       }
+    },
+    {
+      "methodName": "saveTemplate",
+      "httpMethod": "POST",
+      "grouper": "",
+      "metadata": {
+        "anonymous": false,
+        "input": [
+          {
+            "parameterName": "data",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "js",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "css",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "html",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "idreport",
+            "parameterType": "uuid",
+            "list": false
+          }
+        ],
+        "output": [
+          {
+            "parameterName": "result",
+            "parameterType": "boolean",
+            "list": false
+          }
+        ]
+      }
     }
   ],
   "enums": [
