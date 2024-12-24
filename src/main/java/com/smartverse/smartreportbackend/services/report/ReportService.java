@@ -125,7 +125,7 @@ public class ReportService {
     public void addAmount(UUID reportID){
         var report = reportRepository.findById(reportID).orElse(null);
         if(report != null){
-            report.setAmount(report.getAmount() + 1);
+            report.setAmount((report.getAmount() == null ? 0 : report.getAmount()) + 1);
             reportRepository.save(report);
         }
     }
