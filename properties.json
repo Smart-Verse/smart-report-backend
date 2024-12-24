@@ -511,7 +511,7 @@
         "input": [
           {
             "parameterName": "data",
-            "parameterType": "string",
+            "parameterType": "map",
             "list": false
           },
           {

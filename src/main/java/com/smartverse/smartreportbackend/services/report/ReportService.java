@@ -1,5 +1,6 @@
 package com.smartverse.smartreportbackend.services.report;
 
+import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.potatotech.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.common.FileCommon;
@@ -90,16 +91,18 @@ public class ReportService {
         return output;
     }
 
-    public byte[] generate(UUID idreport, String data) {
+    public byte[] generate(UUID idreport, Map data) {
         var templateProperties = this.getTemplate(idreport);
 
         var template = FileCommon.loadFile("index.html","template");
+
+        var gson = new Gson();
 
         template = template
                 .replace("${css}", templateProperties.css)
                 .replace("${js}", templateProperties.js.replace("function",""))
                 .replace("${html}", templateProperties.html)
-                .replace("${json}", (data == null ? templateProperties.data : data));
+                .replace("${json}", (data == null ? templateProperties.data : gson.toJson(data)));
 
 
         var report = new LinkedHashMap<String, Object>();
