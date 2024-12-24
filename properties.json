@@ -501,6 +501,33 @@
           }
         ]
       }
+    },
+    {
+      "methodName": "generateReport",
+      "httpMethod": "POST",
+      "grouper": "",
+      "metadata": {
+        "anonymous": false,
+        "input": [
+          {
+            "parameterName": "data",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "idreport",
+            "parameterType": "uuid",
+            "list": false
+          }
+        ],
+        "output": [
+          {
+            "parameterName": "report",
+            "parameterType": "byte[]",
+            "list": false
+          }
+        ]
+      }
     }
   ],
   "enums": [

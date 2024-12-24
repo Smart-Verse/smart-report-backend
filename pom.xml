@@ -18,7 +18,7 @@
 		<spring-cloud.version>2022.0.3</spring-cloud.version>
 		<jjwt.version>0.11.5</jjwt.version>
 		<authorization.version>1.0.2</authorization.version>
-		<entity-generatior.version>0.0.21-SNAPSHOT</entity-generatior.version>
+		<entity-generatior.version>0.0.22-SNAPSHOT</entity-generatior.version>
 	</properties>
 	<dependencies>
 		<dependency>

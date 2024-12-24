@@ -8,5 +8,7 @@ public enum EnumConfigContext {
     DB_PASSWORD,
     SECRET_JWT,
     SERVER_PORT,
-    SERVICE_NAME
+    SERVICE_NAME,
+    MONGO_USER,
+    MONGO_PASSWORD,
 }

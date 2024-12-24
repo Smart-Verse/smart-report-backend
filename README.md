@@ -13,6 +13,9 @@ Definir as seguintes variaveis de ambiente
     SECRET_JWT=
     SERVER_PORT=5070
     SERVICE_NAME=smartreport
+    MONGO_USER=smartreport
+    MONGO_PASSWORD=password
+
 
 O projeto é configurado para ser multitenancy com locatarios usando schemas
 
