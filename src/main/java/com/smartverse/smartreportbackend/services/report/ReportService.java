@@ -52,7 +52,8 @@ public class ReportService {
         map.put("data",input.data);
         map.put("report",input.idreport.toString());
 
-        collection.updateOne(filter,new Document(map));
+
+        collection.updateOne(filter,new Document("$set",map));
 
         return true;
     }
