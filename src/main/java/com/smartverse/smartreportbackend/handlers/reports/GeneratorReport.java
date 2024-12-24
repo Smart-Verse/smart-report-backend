@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class GeneratorReport implements GenerateReport, SaveTemplate, GetTemplate {
+public class GeneratorReport implements GenerateReport, SaveTemplate, GetTemplate, GetMetrics {
 
 
     @Autowired
@@ -19,9 +19,12 @@ public class GeneratorReport implements GenerateReport, SaveTemplate, GetTemplat
 
     @Override
     public ResponseEntity<GenerateReportOutput> generateReport(GenerateReportInput input) {
-        byte[] report = reportService.generate(input);
+        byte[] report = reportService.generate(input.idreport, input.data);
         var output = new GenerateReportOutput();
         output.report = report;
+        if(input.data != null){
+            reportService.addAmount(input.idreport);
+        }
         return ResponseEntity.ok(output);
     }
 
@@ -35,6 +38,12 @@ public class GeneratorReport implements GenerateReport, SaveTemplate, GetTemplat
     @Override
     public ResponseEntity<GetTemplateOutput> getTemplate(UUID idreport) {
         var output = reportService.getTemplate(idreport);
+        return ResponseEntity.ok(output);
+    }
+
+    @Override
+    public ResponseEntity<GetMetricsOutput> getMetrics(Integer repository) {
+        var output = reportService.metrics();
         return ResponseEntity.ok(output);
     }
 }

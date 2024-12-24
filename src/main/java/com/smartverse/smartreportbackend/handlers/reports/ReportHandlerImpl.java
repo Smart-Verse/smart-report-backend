@@ -2,7 +2,6 @@ package com.smartverse.smartreportbackend.handlers.reports;
 
 import com.smartverse.smartreportbackend.services.report.ReportService;
 import com.smartverse.smartreportbackend_gen.ReportDTO;
-import com.smartverse.smartreportbackend_gen.ReportEntity;
 import com.smartverse.smartreportbackend_gen.ReportHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;

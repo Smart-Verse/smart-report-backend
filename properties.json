@@ -359,29 +359,6 @@
           }
         },
         {
-          "comment": "Id Template",
-          "fieldName": "templateId",
-          "list": false,
-          "fieldProperties": {
-            "fieldType": "uuid",
-            "required": false,
-            "valueDefault": ""
-          },
-          "metadata": {
-            "nullable": true,
-            "key": false
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
-        },
-        {
           "comment": "Relacionamento com repository",
           "fieldName": "repository",
           "list": false,
@@ -400,6 +377,29 @@
             "mappedBy": "",
             "bidirectional": false,
             "reference": false
+          },
+          "frontendProperties": {
+            "label": "",
+            "size": 0,
+            "hidden": false,
+            "order": 0,
+            "guidance": "",
+            "reference": "",
+            "enableFieldsFilter": false
+          }
+        },
+        {
+          "comment": "Quantidade gerada",
+          "fieldName": "amount",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": false,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
           },
           "frontendProperties": {
             "label": "",
@@ -566,6 +566,38 @@
           {
             "parameterName": "idreport",
             "parameterType": "uuid",
+            "list": false
+          }
+        ]
+      }
+    },
+    {
+      "methodName": "getMetrics",
+      "httpMethod": "GET",
+      "grouper": "",
+      "metadata": {
+        "anonymous": false,
+        "input": [
+          {
+            "parameterName": "repository",
+            "parameterType": "int",
+            "list": false
+          }
+        ],
+        "output": [
+          {
+            "parameterName": "repository",
+            "parameterType": "long",
+            "list": false
+          },
+          {
+            "parameterName": "report",
+            "parameterType": "long",
+            "list": false
+          },
+          {
+            "parameterName": "generateds",
+            "parameterType": "long",
             "list": false
           }
         ]

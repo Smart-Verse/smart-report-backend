@@ -4,10 +4,8 @@ import com.mongodb.client.MongoCollection;
 import com.potatotech.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.common.FileCommon;
 import com.smartverse.smartreportbackend.config.mongo.ConnectionMongoDb;
-import com.smartverse.smartreportbackend_gen.GenerateReportInput;
-import com.smartverse.smartreportbackend_gen.GetTemplateOutput;
-import com.smartverse.smartreportbackend_gen.ReportEntity;
-import com.smartverse.smartreportbackend_gen.SaveTemplateInput;
+import com.smartverse.smartreportbackend.repository.report.ReportCustomRepository;
+import com.smartverse.smartreportbackend_gen.*;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,12 @@ public class ReportService {
 
     @Autowired
     ReportClient reportClient;
+
+    @Autowired
+    ReportCustomRepository reportRepository;
+
+    @Autowired
+    RepositoryRepository repositoryRepository;
 
 
 
@@ -86,8 +90,8 @@ public class ReportService {
         return output;
     }
 
-    public byte[] generate(GenerateReportInput input) {
-        var templateProperties = this.getTemplate(input.idreport);
+    public byte[] generate(UUID idreport, String data) {
+        var templateProperties = this.getTemplate(idreport);
 
         var template = FileCommon.loadFile("index.html","template");
 
@@ -95,14 +99,33 @@ public class ReportService {
                 .replace("${css}", templateProperties.css)
                 .replace("${js}", templateProperties.js.replace("function",""))
                 .replace("${html}", templateProperties.html)
-                .replace("${json}", templateProperties.data);
+                .replace("${json}", (data == null ? templateProperties.data : data));
 
 
         var report = new LinkedHashMap<String, Object>();
         report.put("report",template);
 
-        var out = reportClient.getReport(report);
-
-        return out;
+        return reportClient.getReport(report);
     }
+
+    public GetMetricsOutput metrics(){
+
+        var output = new GetMetricsOutput();
+
+        output.generateds = reportRepository.sumAmount();
+        output.report = reportRepository.count();
+        output.repository = repositoryRepository.count();
+
+        return output;
+    }
+
+    public void addAmount(UUID reportID){
+        var report = reportRepository.findById(reportID).orElse(null);
+        if(report != null){
+            report.setAmount(report.getAmount() + 1);
+            reportRepository.save(report);
+        }
+    }
+
+
 }

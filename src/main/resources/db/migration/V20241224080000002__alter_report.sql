@@ -1,0 +1,1 @@
+update report set amount = 0 where amount is null;
