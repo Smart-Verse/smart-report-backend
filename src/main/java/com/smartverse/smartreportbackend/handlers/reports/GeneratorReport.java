@@ -19,7 +19,10 @@ public class GeneratorReport implements GenerateReport, SaveTemplate, GetTemplat
 
     @Override
     public ResponseEntity<GenerateReportOutput> generateReport(GenerateReportInput input) {
-        return null;
+        byte[] report = reportService.generate(input);
+        var output = new GenerateReportOutput();
+        output.report = report;
+        return ResponseEntity.ok(output);
     }
 
     @Override

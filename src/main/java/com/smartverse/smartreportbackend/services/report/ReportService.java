@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.potatotech.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.common.FileCommon;
 import com.smartverse.smartreportbackend.config.mongo.ConnectionMongoDb;
+import com.smartverse.smartreportbackend_gen.GenerateReportInput;
 import com.smartverse.smartreportbackend_gen.GetTemplateOutput;
 import com.smartverse.smartreportbackend_gen.ReportEntity;
 import com.smartverse.smartreportbackend_gen.SaveTemplateInput;
@@ -16,6 +17,8 @@ import java.util.UUID;
 
 @Service
 public class ReportService {
+
+
 
     public void saveDefault(ReportEntity reportEntity){
 
@@ -76,5 +79,21 @@ public class ReportService {
         output.idreport = UUID.fromString(foundDocument.get("report").toString());
 
         return output;
+    }
+
+    public byte[] generate(GenerateReportInput input) {
+        var templateProperties = this.getTemplate(input.idreport);
+
+        var template = FileCommon.loadFile("index.html","template");
+
+        template = template
+                .replace("${css}", templateProperties.css)
+                .replace("${js}", templateProperties.js)
+                .replace("${html}", templateProperties.html)
+                .replace("${json}", templateProperties.data);
+
+        System.out.println(template);
+
+        return template.getBytes();
     }
 }
