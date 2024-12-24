@@ -9,14 +9,19 @@ import com.smartverse.smartreportbackend_gen.GetTemplateOutput;
 import com.smartverse.smartreportbackend_gen.ReportEntity;
 import com.smartverse.smartreportbackend_gen.SaveTemplateInput;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
 
 @Service
 public class ReportService {
+
+    @Autowired
+    ReportClient reportClient;
 
 
 
@@ -88,12 +93,16 @@ public class ReportService {
 
         template = template
                 .replace("${css}", templateProperties.css)
-                .replace("${js}", templateProperties.js)
+                .replace("${js}", templateProperties.js.replace("function",""))
                 .replace("${html}", templateProperties.html)
                 .replace("${json}", templateProperties.data);
 
-        System.out.println(template);
 
-        return template.getBytes();
+        var report = new LinkedHashMap<String, Object>();
+        report.put("report",template);
+
+        var out = reportClient.getReport(report);
+
+        return out;
     }
 }
