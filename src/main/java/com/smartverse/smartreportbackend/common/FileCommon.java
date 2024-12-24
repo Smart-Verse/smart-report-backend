@@ -15,6 +15,14 @@ public class FileCommon {
         return convertInputStreamToString(inputStream);
     }
 
+    public static String loadFile(String fileName,String dir){
+
+        ClassLoader classLoader = FileCommon.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(String.format("models/%s/%s", dir,fileName));
+
+        return convertInputStreamToString(inputStream);
+    }
+
     public static String convertInputStreamToString(InputStream inputStream){
         try{
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @CrossOrigin(origins = "*")
-public class GeneratorReport implements GenerateReport, SaveTemplate {
+public class GeneratorReport implements GenerateReport, SaveTemplate, GetTemplate {
 
 
     @Autowired
@@ -24,6 +26,12 @@ public class GeneratorReport implements GenerateReport, SaveTemplate {
     public ResponseEntity<SaveTemplateOutput> saveTemplate(SaveTemplateInput input) {
         var output = new SaveTemplateOutput();
         output.result = reportService.saveTemplate(input);
+        return ResponseEntity.ok(output);
+    }
+
+    @Override
+    public ResponseEntity<GetTemplateOutput> getTemplate(UUID idreport) {
+        var output = reportService.getTemplate(idreport);
         return ResponseEntity.ok(output);
     }
 }
