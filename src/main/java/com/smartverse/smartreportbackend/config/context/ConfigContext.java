@@ -6,6 +6,7 @@ public interface ConfigContext {
 
     String getUsername();
     String getPasswod();
-
     String getDatabase();
+    String getHost();
+    String getDatabasePort();
 }

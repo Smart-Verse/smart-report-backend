@@ -9,13 +9,7 @@ public class ConfigContextImpl implements ConfigContext {
 
     @Override
     public String getUrl() {
-        return switch (System.getenv(EnumConfigContext.DB_NAME.name())){
-            case "POSTGRES" -> "jdbc:postgresql://localhost:5434/"+this.getDatabase();
-            case "MYSQL" -> "jdbc:postgresql://localhost:5432/"+this.getDatabase();
-            case "SQLSERVER" -> "jdbc:postgresql://localhost:5432/"+this.getDatabase();
-            default -> "";
-
-        };
+        return "jdbc:postgresql://"+ this.getHost()+":"+ this.getDatabasePort() +"/"+this.getDatabase();
     }
 
     @Override
@@ -31,5 +25,15 @@ public class ConfigContextImpl implements ConfigContext {
     @Override
     public String getDatabase() {
         return System.getenv(EnumConfigContext.DATABASE_SCHEMA_NAME.name());
+    }
+
+    @Override
+    public String getHost() {
+        return  System.getenv(EnumConfigContext.SERVER_HOST.name()) == null ? "localhost" : System.getenv(EnumConfigContext.SERVER_HOST.name());
+    }
+
+    @Override
+    public String getDatabasePort() {
+        return System.getenv(EnumConfigContext.DB_PORT.name()) == null ? "5434" : System.getenv(EnumConfigContext.DB_PORT.name());
     }
 }
