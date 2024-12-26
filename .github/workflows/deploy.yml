@@ -1,0 +1,25 @@
+name: Deploy on Develop Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Run SSH commands on server
+        run: |
+          sshpass -p "${{ secrets.SSH_KEY }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} '
+            cd /home/server/services/backend/smart-report &&
+            docker compose build --no-cache &&
+            docker compose up -d
+          '
