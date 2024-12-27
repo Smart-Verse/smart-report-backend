@@ -1,3 +1,12 @@
 {
-  "teste": "123"
+  "totalVendas": 120,
+  "totalClientes": 75,
+  "faturamento": 12500.50,
+  "vendas": [
+    { "id": 1, "cliente": "João Silva", "data": "2024-12-20", "produto": "Notebook", "quantidade": 1, "total": 3500 },
+    { "id": 2, "cliente": "Maria Oliveira", "data": "2024-12-21", "produto": "Mouse", "quantidade": 3, "total": 150 },
+    { "id": 3, "cliente": "Pedro Souza", "data": "2024-12-22", "produto": "Monitor", "quantidade": 2, "total": 1200 },
+    { "id": 4, "cliente": "Ana Clara", "data": "2024-12-23", "produto": "Teclado", "quantidade": 1, "total": 250 },
+    { "id": 5, "cliente": "Carlos Lima", "data": "2024-12-24", "produto": "Smartphone", "quantidade": 1, "total": 4000 }
+  ]
 }

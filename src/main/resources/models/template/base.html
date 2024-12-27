@@ -1,3 +1,46 @@
-<div>
-    Olá esse é meu primeiro relatório
+<div id="relatorio" class="container mt-5">
+    <h1 class="text-center mb-4">Relatório de Vendas - EXEMPLO</h1>
+
+    <div class="row text-center mb-4">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5 class="card-title">Total de Vendas</h5>
+                <p class="card-text display-4">{{ data.totalVendas }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5 class="card-title">Clientes Atendidos</h5>
+                <p class="card-text display-4">{{ data.totalClientes }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5 class="card-title">Faturamento (R$)</h5>
+                <p class="card-text display-4">{{ data.faturamento.toFixed(2) }}</p>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mb-3">Detalhamento de Vendas</h2>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Total (R$)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="venda in data.vendas" :key="venda.id">
+            <td>{{ venda.cliente }}</td>
+            <td>{{ onDateFormat(venda.data) }}</td>
+            <td>{{ venda.produto }}</td>
+            <td>{{ venda.quantidade }}</td>
+            <td>{{ venda.total.toFixed(2) }}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
