@@ -10,10 +10,9 @@ import com.smartverse.smartreportbackend_gen.*;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service
@@ -98,9 +97,20 @@ public class ReportService {
 
         var gson = new Gson();
 
+        var functions = templateProperties.js.split("function");
+
+        var fns = new AtomicReference<String>();
+        fns.set("");
+        Arrays.stream(functions).parallel().forEach(function -> {
+            if(!function.isEmpty()){
+                //fns.getAndSet(function.replace("function","") + ",");
+                fns.set(fns.get() + function.replace("function","") + ",");
+            }
+        });
+
         template = template
                 .replace("${css}", templateProperties.css)
-                .replace("${js}", templateProperties.js.replace("function",""))
+                .replace("${js}", fns.get())
                 .replace("${html}", templateProperties.html)
                 .replace("${json}", (data == null ? templateProperties.data : gson.toJson(data)));
 
