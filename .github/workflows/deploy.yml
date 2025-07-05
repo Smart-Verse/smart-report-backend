@@ -19,7 +19,7 @@ jobs:
       - name: Run SSH commands on server
         run: |
           sshpass -p "${{ secrets.SSH_KEY }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} '
-            cd /home/server/services/backend/smart-report &&
+            cd /home/server/services/smart-report/smart-report-backend &&
             docker compose build --no-cache &&
             docker compose up -d
           '
