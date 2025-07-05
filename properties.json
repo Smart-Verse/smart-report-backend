@@ -19,16 +19,7 @@
             "nullable": false,
             "key": true
           },
-          "list": false,
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
+          "list": false
         },
         {
           "comment": "Nome do usuário",
@@ -42,16 +33,7 @@
             "nullable": false,
             "key": false
           },
-          "list": false,
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
+          "list": false
         },
         {
           "comment": "Foto Usuário",
@@ -65,16 +47,7 @@
             "nullable": true,
             "key": false
           },
-          "list": false,
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
+          "list": false
         },
         {
           "comment": "Tema",
@@ -88,16 +61,7 @@
             "nullable": true,
             "key": false
           },
-          "list": false,
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
+          "list": false
         },
         {
           "comment": "Linguagem sistema",
@@ -111,16 +75,7 @@
             "nullable": false,
             "key": false
           },
-          "list": false,
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
+          "list": false
         },
         {
           "comment": "Email",
@@ -134,16 +89,7 @@
             "nullable": false,
             "key": false
           },
-          "list": false,
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
+          "list": false
         },
         {
           "comment": "ID do usuário",
@@ -157,16 +103,7 @@
             "nullable": false,
             "key": false
           },
-          "list": false,
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
-          }
+          "list": false
         }
       ],
       "classExtends": "",
@@ -191,15 +128,6 @@
           "metadata": {
             "nullable": false,
             "key": true
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         },
         {
@@ -214,15 +142,6 @@
           "metadata": {
             "nullable": false,
             "key": false
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         },
         {
@@ -237,15 +156,6 @@
           "metadata": {
             "nullable": false,
             "key": false
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         }
       ],
@@ -269,15 +179,6 @@
           "metadata": {
             "nullable": false,
             "key": true
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         },
         {
@@ -292,15 +193,6 @@
           "metadata": {
             "nullable": false,
             "key": false
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         }
       ],
@@ -324,15 +216,6 @@
           "metadata": {
             "nullable": false,
             "key": true
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         },
         {
@@ -347,15 +230,6 @@
           "metadata": {
             "nullable": false,
             "key": false
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         },
         {
@@ -377,15 +251,6 @@
             "mappedBy": "",
             "bidirectional": false,
             "reference": false
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         },
         {
@@ -400,15 +265,6 @@
           "metadata": {
             "nullable": true,
             "key": false
-          },
-          "frontendProperties": {
-            "label": "",
-            "size": 0,
-            "hidden": false,
-            "order": 0,
-            "guidance": "",
-            "reference": "",
-            "enableFieldsFilter": false
           }
         }
       ],
@@ -598,6 +454,33 @@
           {
             "parameterName": "generateds",
             "parameterType": "long",
+            "list": false
+          }
+        ]
+      }
+    },
+    {
+      "methodName": "participateBeta",
+      "httpMethod": "POST",
+      "grouper": "",
+      "metadata": {
+        "anonymous": true,
+        "input": [
+          {
+            "parameterName": "email",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "name",
+            "parameterType": "string",
+            "list": false
+          }
+        ],
+        "output": [
+          {
+            "parameterName": "result",
+            "parameterType": "boolean",
             "list": false
           }
         ]
