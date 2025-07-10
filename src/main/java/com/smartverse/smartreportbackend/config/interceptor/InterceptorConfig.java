@@ -28,21 +28,23 @@ public class InterceptorConfig extends Authenticate implements HandlerIntercepto
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
-        var tenantConfiguration = new TenantConfiguration();
-
-        String uri = request.getRequestURI();
-
-        if(validateDomainsAllowAccess(uri)){
-            return true;
-        }
 
         if(isOptions(request)){
             return true;
         }
+
+
+        var tenantConfiguration = new TenantConfiguration();
+        var uri = request.getRequestURI();
+        var isAnonymous = tenantConfiguration.validAnonymous(handler);
         var auth = request.getHeader(AUTHORIZATION);
         var tenant = request.getHeader(TENANT);
 
-        if(!tenantConfiguration.validAnonymous(handler)){
+        if(!isAnonymous){
+            if(validateDomainsAllowAccess(uri)){
+                return true;
+            }
+
             var user = this.isAuthenticated(auth);
             TenantContext.setCurrentTenant(user.getTenant());
             tenant = user.getTenant();

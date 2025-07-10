@@ -5,7 +5,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.smartverse.smartreportbackend.config.context.EnumConfigContext;
 import lombok.Getter;
-import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Singleton;
 import java.io.UnsupportedEncodingException;
