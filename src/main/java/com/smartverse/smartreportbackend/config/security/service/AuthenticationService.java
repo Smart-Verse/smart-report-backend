@@ -96,7 +96,7 @@ public class AuthenticationService {
         emailcontent = emailcontent.replace("{{url}}",String.format("http://localhost:4200/#/register-confirmation/%s",userConfirmation.getHash()));
 
         try{
-            emailService.sendEmail(user.getEmail(),"Confirmação de email",emailcontent);
+            //emailService.sendEmail(user.getEmail(),"Confirmação de email",emailcontent);
         } catch (Exception e){
             throw new ServiceException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
