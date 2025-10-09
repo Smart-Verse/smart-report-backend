@@ -3,12 +3,12 @@ package com.smartverse.smartreportbackend.services.email;
 import com.potatotech.authorization.exception.ServiceException;
 
 import com.smartverse.smartreportbackend.common.FileCommon;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,7 +33,7 @@ public class EmailService {
         try{
             var emailModel = loadModel(modelName);
             sendEmail(to,subject,emailModel);
-        }catch ( MessagingException | jakarta.mail.MessagingException e){
+        }catch ( MessagingException e){
             throw new ServiceException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
