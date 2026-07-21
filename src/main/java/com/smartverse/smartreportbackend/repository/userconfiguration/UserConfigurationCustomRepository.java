@@ -1,8 +1,9 @@
 package com.smartverse.smartreportbackend.repository.userconfiguration;
 
 
-import com.smartverse.smartreportbackend_gen.UserConfigurationEntity;
-import com.smartverse.smartreportbackend_gen.UserConfigurationRepository;
+
+import com.smartverse.smartreportbackend_gen.entities.UserConfigurationEntity;
+import com.smartverse.smartreportbackend_gen.repositories.UserConfigurationRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 

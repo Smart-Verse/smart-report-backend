@@ -6,17 +6,23 @@ import com.potatotech.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.common.FileCommon;
 import com.smartverse.smartreportbackend.config.mongo.ConnectionMongoDb;
 import com.smartverse.smartreportbackend.repository.report.ReportCustomRepository;
-import com.smartverse.smartreportbackend_gen.*;
+import com.smartverse.smartreportbackend_gen.dtos.ReportDTO;
+import com.smartverse.smartreportbackend_gen.endpoints.GetMetricsOutput;
+import com.smartverse.smartreportbackend_gen.endpoints.GetTemplateOutput;
+import com.smartverse.smartreportbackend_gen.endpoints.SaveTemplateInput;
+import com.smartverse.smartreportbackend_gen.entities.ReportEntity;
+import com.smartverse.smartreportbackend_gen.repositories.RepositoryRepository;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service
-public class ReportService {
+public class ReportService extends com.smartverse.smartreportbackend_gen.services.ReportService {
 
     @Autowired
     ReportClient reportClient;
@@ -26,6 +32,14 @@ public class ReportService {
 
     @Autowired
     RepositoryRepository repositoryRepository;
+
+    @Override
+    @Transactional
+    public ReportDTO save(ReportDTO obj) {
+        var saved = super.save(obj);
+        saveDefault(dtoConverter.toEntity(saved, null));
+        return saved;
+    }
 
 
 

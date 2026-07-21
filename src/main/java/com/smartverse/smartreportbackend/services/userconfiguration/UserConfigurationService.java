@@ -3,7 +3,12 @@ package com.smartverse.smartreportbackend.services.userconfiguration;
 import com.potatotech.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.config.database.TenantSchemaInterceptor;
 import com.smartverse.smartreportbackend.config.security.repository.AuthenticationRepository;
-import com.smartverse.smartreportbackend_gen.*;
+import com.smartverse.smartreportbackend_gen.converters.UserConfigurationDTOConverter;
+import com.smartverse.smartreportbackend_gen.dtos.UserConfigurationDTO;
+import com.smartverse.smartreportbackend_gen.entities.UserConfigurationEntity;
+import com.smartverse.smartreportbackend_gen.enums.Language;
+import com.smartverse.smartreportbackend_gen.enums.Theme;
+import com.smartverse.smartreportbackend_gen.repositories.UserConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Service
-public class UserConfigurationService {
+public class UserConfigurationService extends com.smartverse.smartreportbackend_gen.services.UserConfigurationService {
 
 
     @Autowired
@@ -25,6 +30,14 @@ public class UserConfigurationService {
 
     @Autowired
     private UserConfigurationDTOConverter userConfigurationDTOConverter;
+
+    @Override
+    @Transactional
+    public UserConfigurationDTO update(UserConfigurationDTO obj, UUID id) {
+        var updated = super.update(obj, id);
+        updateMaster(dtoConverter.toEntity(updated, null));
+        return updated;
+    }
 
 
     public UserConfigurationDTO saveUserConfiguration(UUID hash) {

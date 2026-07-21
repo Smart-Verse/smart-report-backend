@@ -1,10 +1,9 @@
 package com.smartverse.smartreportbackend.services.beta;
 
 import com.mongodb.client.MongoCollection;
-import com.potatotech.authorization.tenant.TenantContext;
-import com.smartverse.smartreportbackend.common.FileCommon;
+
 import com.smartverse.smartreportbackend.config.mongo.ConnectionMongoDb;
-import com.smartverse.smartreportbackend_gen.ReportEntity;
+
 import org.bson.Document;
 import org.springframework.stereotype.Service;
 

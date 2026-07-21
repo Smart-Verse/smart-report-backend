@@ -2,9 +2,9 @@ package com.smartverse.smartreportbackend.handlers.beta;
 
 import com.potatotech.authorization.stereotype.Anonymous;
 import com.smartverse.smartreportbackend.services.beta.ParticipateBetaService;
-import com.smartverse.smartreportbackend_gen.ParticipateBeta;
-import com.smartverse.smartreportbackend_gen.ParticipateBetaInput;
-import com.smartverse.smartreportbackend_gen.ParticipateBetaOutput;
+import com.smartverse.smartreportbackend_gen.endpoints.ParticipateBeta;
+import com.smartverse.smartreportbackend_gen.endpoints.ParticipateBetaInput;
+import com.smartverse.smartreportbackend_gen.endpoints.ParticipateBetaOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

@@ -18,14 +18,14 @@ public class DBMigration {
     private static List<String> tenants = new ArrayList<>();
 
     @Bean
-    public void initializeFlyway(){
+    public Flyway initializeFlyway(){
         var fly = Flyway.configure()
                 .locations("classpath:db/migration")
                 .dataSource(configContext.getUrl(),configContext.getUsername(),configContext.getPasswod())
                 .createSchemas(true)
                 .load();
         fly.migrate();
-
+        return fly;
     }
 
 

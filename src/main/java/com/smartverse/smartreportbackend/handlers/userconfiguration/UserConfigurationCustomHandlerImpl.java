@@ -2,9 +2,10 @@ package com.smartverse.smartreportbackend.handlers.userconfiguration;
 
 import com.smartverse.smartreportbackend.repository.userconfiguration.UserConfigurationCustomRepository;
 import com.smartverse.smartreportbackend.services.userconfiguration.UserConfigurationService;
-import com.smartverse.smartreportbackend_gen.GetUser;
-import com.smartverse.smartreportbackend_gen.GetUserOutput;
-import com.smartverse.smartreportbackend_gen.UserConfigurationDTOConverter;
+
+import com.smartverse.smartreportbackend_gen.converters.UserConfigurationDTOConverter;
+import com.smartverse.smartreportbackend_gen.endpoints.GetUser;
+import com.smartverse.smartreportbackend_gen.endpoints.GetUserOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

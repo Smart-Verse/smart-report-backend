@@ -1,7 +1,7 @@
 package com.smartverse.smartreportbackend.handlers.reports;
 
 import com.smartverse.smartreportbackend.services.report.ReportService;
-import com.smartverse.smartreportbackend_gen.*;
+import com.smartverse.smartreportbackend_gen.endpoints.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

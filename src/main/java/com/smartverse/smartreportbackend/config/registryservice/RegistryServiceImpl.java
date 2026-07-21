@@ -3,7 +3,7 @@ package com.smartverse.smartreportbackend.config.registryservice;
 
 import com.smartverse.smartreportbackend.config.context.EnumConfigContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.Hashtable;
@@ -18,7 +18,7 @@ public class RegistryServiceImpl{
         this.registryService = feignClient;
     }
 
-    @Bean
+    @PostConstruct
     public void registerService() {
         Hashtable<String, Object> hashtable = new Hashtable();
         hashtable.put("service", System.getenv(EnumConfigContext.SERVICE_NAME.name()));

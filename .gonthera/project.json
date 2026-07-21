@@ -107,14 +107,16 @@
         }
       ],
       "classExtends": "",
-      "generateDefaultHandlers": true,
-      "handlerAbstract": true
+      "generateDefaultControllers": true,
+      "controllerAbstract": true,
+      "serviceAbstract": true
     },
     {
       "entityName": "userConfirmation",
       "tableName": "user_confirmation",
-      "generateDefaultHandlers": false,
-      "handlerAbstract": false,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
       "entityFields": [
         {
           "comment": "Identificação",
@@ -164,8 +166,9 @@
     {
       "entityName": "repository",
       "tableName": "repository",
-      "generateDefaultHandlers": true,
-      "handlerAbstract": false,
+      "generateDefaultControllers": true,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
       "entityFields": [
         {
           "comment": "id",
@@ -201,8 +204,9 @@
     {
       "entityName": "report",
       "tableName": "report",
-      "generateDefaultHandlers": true,
-      "handlerAbstract": true,
+      "generateDefaultControllers": true,
+      "controllerAbstract": true,
+      "serviceAbstract": true,
       "entityFields": [
         {
           "comment": "id",

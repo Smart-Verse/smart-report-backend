@@ -10,7 +10,9 @@ import com.smartverse.smartreportbackend.config.security.model.UsersDTO;
 import com.smartverse.smartreportbackend.config.security.model.UsersEntity;
 import com.smartverse.smartreportbackend.config.security.repository.AuthenticationRepository;
 import com.smartverse.smartreportbackend.services.email.EmailService;
-import com.smartverse.smartreportbackend_gen.*;
+
+import com.smartverse.smartreportbackend_gen.entities.UserConfirmationEntity;
+import com.smartverse.smartreportbackend_gen.repositories.UserConfirmationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

@@ -1,6 +1,7 @@
 package com.smartverse.smartreportbackend.repository.report;
 
-import com.smartverse.smartreportbackend_gen.ReportRepository;
+
+import com.smartverse.smartreportbackend_gen.repositories.ReportRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
