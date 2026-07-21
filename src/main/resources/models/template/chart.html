@@ -1,0 +1,31 @@
+<main class="report">
+    <header>
+        <div><span class="kicker">Analytics</span>
+            <h1>{{ data.title }}</h1>
+            <p>{{ data.subtitle }}</p></div>
+        <div class="date">{{ data.period }}</div>
+    </header>
+    <section class="cards">
+        <article v-for="metric in data.metrics" :key="metric.label"><span>{{ metric.label }}</span><strong>{{
+            metric.value }}</strong><small :class="{positive: metric.positive}">{{ metric.change }}</small></article>
+    </section>
+    <section class="chart-card">
+        <div class="chart-title">
+            <div><span>Desempenho mensal</span>
+                <h2>{{ data.chart.title }}</h2></div>
+            <strong>{{ data.chart.total }}</strong></div>
+        <div class="chart">
+            <div class="grid-line" v-for="line in 4" :key="line"></div>
+            <div class="bar-column" v-for="point in data.chart.points" :key="point.label"><span class="bar-value">{{ point.value }}</span>
+                <div class="bar" :style="{height: barHeight(point.value, data.chart.max)+'%'}"></div>
+                <small>{{ point.label }}</small></div>
+        </div>
+    </section>
+    <section class="insights">
+        <article v-for="item in data.insights" :key="item.title"><span :style="{background:item.color}"></span>
+            <div><strong>{{ item.title }}</strong>
+                <p>{{ item.description }}</p></div>
+        </article>
+    </section>
+    <footer>{{ data.company }} · Gerado com SmartReport</footer>
+</main>

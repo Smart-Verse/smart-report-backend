@@ -1,0 +1,55 @@
+{
+  "title": "Relação de clientes",
+  "subtitle": "Acompanhamento consolidado de cadastros e movimentações.",
+  "period": "Julho de 2026",
+  "owner": "Equipe Comercial",
+  "company": "Sua Empresa",
+  "generatedAt": "2026-07-21",
+  "items": [
+    {
+      "id": 1,
+      "name": "Marina Costa",
+      "email": "marina@empresa.com",
+      "category": "Enterprise",
+      "date": "2026-07-02",
+      "status": "Ativo",
+      "value": 8450
+    },
+    {
+      "id": 2,
+      "name": "Grupo Horizonte",
+      "email": "financeiro@horizonte.com",
+      "category": "Corporativo",
+      "date": "2026-07-05",
+      "status": "Ativo",
+      "value": 12300
+    },
+    {
+      "id": 3,
+      "name": "Lucas Almeida",
+      "email": "lucas@negocio.com",
+      "category": "Profissional",
+      "date": "2026-07-08",
+      "status": "Pendente",
+      "value": 2190
+    },
+    {
+      "id": 4,
+      "name": "Vértice Digital",
+      "email": "contato@vertice.com",
+      "category": "Enterprise",
+      "date": "2026-07-12",
+      "status": "Ativo",
+      "value": 9780
+    },
+    {
+      "id": 5,
+      "name": "Comercial Aurora",
+      "email": "compras@aurora.com",
+      "category": "Corporativo",
+      "date": "2026-07-18",
+      "status": "Cancelado",
+      "value": 4300
+    }
+  ]
+}

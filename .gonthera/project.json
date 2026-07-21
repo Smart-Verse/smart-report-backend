@@ -270,6 +270,20 @@
             "nullable": true,
             "key": false
           }
+        },
+        {
+          "comment": "Modelo inicial do relatório",
+          "fieldName": "templateType",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "reportTemplate",
+            "required": true,
+            "valueDefault": "STANDARD"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
         }
       ],
       "classExtends": ""
@@ -927,6 +941,15 @@
         "SERVICE_NAME",
         "MONGO_USER",
         "MONGO_PASSWORD"
+      ]
+    },
+    {
+      "enumName": "reportTemplate",
+      "values": [
+        "STANDARD",
+        "LIST",
+        "CHART",
+        "FINANCIAL"
       ]
     }
   ]

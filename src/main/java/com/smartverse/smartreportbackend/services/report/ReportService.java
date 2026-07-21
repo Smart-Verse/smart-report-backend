@@ -52,11 +52,15 @@ public class ReportService extends com.smartverse.smartreportbackend_gen.service
 
         var map = new HashMap<String, Object>();
 
-        map.put("html", FileCommon.loadFile("base.html","template"));
-        map.put("css",FileCommon.loadFile("base.css","template"));
-        map.put("js",FileCommon.loadFile("base.js","template"));
-        map.put("data",FileCommon.loadFile("base.json","template"));
-        map.put("report",reportEntity.getId().toString());
+        var templateName = reportEntity.getTemplateType() == null
+                ? "standard"
+                : reportEntity.getTemplateType().name().toLowerCase();
+
+        map.put("html", FileCommon.loadFile(templateName + ".html", "template"));
+        map.put("css", FileCommon.loadFile(templateName + ".css", "template"));
+        map.put("js", FileCommon.loadFile(templateName + ".js", "template"));
+        map.put("data", FileCommon.loadFile(templateName + ".json", "template"));
+        map.put("report", reportEntity.getId().toString());
 
         collection.insertOne(new Document(map));
 

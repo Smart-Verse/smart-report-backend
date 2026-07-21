@@ -1,0 +1,231 @@
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    background: #eef2f4;
+    color: #17211c;
+    font-family: Inter, Arial, sans-serif
+}
+
+.report {
+    width: 210mm;
+    min-height: 297mm;
+    margin: auto;
+    padding: 17mm;
+    background: #fff
+}
+
+header {
+    display: grid;
+    grid-template-columns:42px 1fr auto;
+    align-items: center;
+    gap: 11px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #dfe5e1
+}
+
+.logo {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: #14532d;
+    border-radius: 10px;
+    font-weight: 800
+}
+
+.company strong, .company span, .document span, .document strong {
+    display: block
+}
+
+.company strong {
+    font-size: 12px
+}
+
+.company span, .document span {
+    margin-top: 3px;
+    color: #64746b;
+    font-size: 8px
+}
+
+.document {
+    text-align: right
+}
+
+.document strong {
+    margin-top: 4px;
+    font-size: 10px
+}
+
+.title {
+    padding: 28px 0 18px
+}
+
+.title > span {
+    color: #15803d;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .13em;
+    text-transform: uppercase
+}
+
+.title h1 {
+    margin: 7px 0 5px;
+    font-size: 28px;
+    letter-spacing: -.04em
+}
+
+.title p {
+    margin: 0;
+    color: #64746b;
+    font-size: 10px
+}
+
+.balance {
+    display: grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap: 10px
+}
+
+.balance article {
+    padding: 14px;
+    border: 1px solid #dfe5e1;
+    border-radius: 10px
+}
+
+.balance span, .balance small {
+    display: block;
+    color: #64746b;
+    font-size: 8px
+}
+
+.balance strong {
+    display: block;
+    margin: 7px 0 4px;
+    font-size: 17px
+}
+
+.balance .income {
+    border-top: 3px solid #22c55e
+}
+
+.balance .expense {
+    border-top: 3px solid #f97316
+}
+
+.balance .result {
+    color: #fff;
+    background: #14532d;
+    border-color: #14532d
+}
+
+.balance .result span, .balance .result small {
+    color: #bbf7d0
+}
+
+.statement {
+    margin-top: 28px;
+    border: 1px solid #dfe5e1;
+    border-radius: 11px;
+    overflow: hidden
+}
+
+.statement-head {
+    padding: 13px 14px;
+    display: flex;
+    justify-content: space-between;
+    background: #f6f8f7
+}
+
+.statement-head h2 {
+    margin: 0;
+    font-size: 12px
+}
+
+.statement-head span {
+    color: #64746b;
+    font-size: 8px
+}
+
+.row {
+    padding: 11px 14px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #edf0ee;
+    font-size: 9px
+}
+
+.row > div {
+    display: flex;
+    gap: 9px
+}
+
+.row > div > span {
+    width: 22px;
+    color: #94a39a
+}
+
+.row.total {
+    background: #f0fdf4;
+    font-size: 10px
+}
+
+.negative {
+    color: #dc2626
+}
+
+.payment {
+    margin-top: 25px;
+    padding: 14px;
+    display: flex;
+    justify-content: space-between;
+    background: #f6f8f7;
+    border-radius: 10px
+}
+
+.payment span, .payment strong {
+    display: block
+}
+
+.payment span {
+    color: #64746b;
+    font-size: 8px
+}
+
+.payment strong {
+    margin-top: 4px;
+    font-size: 10px
+}
+
+.payment p {
+    margin: 3px 0 0;
+    color: #64746b;
+    font-size: 8px
+}
+
+.due {
+    text-align: right
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 45px;
+    padding-top: 11px;
+    color: #94a39a;
+    border-top: 1px solid #dfe5e1;
+    font-size: 8px
+}
+
+@media print {
+    body {
+        background: #fff
+    }
+
+    .report {
+        margin: 0
+    }
+}

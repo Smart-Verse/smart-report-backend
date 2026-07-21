@@ -1,0 +1,33 @@
+<main class="report">
+    <header>
+        <div><span class="kicker">Relatório operacional</span>
+            <h1>{{ data.title }}</h1>
+            <p>{{ data.subtitle }}</p></div>
+        <div class="period"><span>Período</span><strong>{{ data.period }}</strong></div>
+    </header>
+    <section class="stats"><span><strong>{{ data.items.length }}</strong> registros</span><span><strong>{{ activeCount(data.items) }}</strong> ativos</span><span><strong>{{ data.owner }}</strong> responsável</span>
+    </section>
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Categoria</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th class="right">Valor</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item,index) in data.items" :key="item.id">
+            <td>{{ String(index+1).padStart(2,'0') }}</td>
+            <td><strong>{{ item.name }}</strong><small>{{ item.email }}</small></td>
+            <td>{{ item.category }}</td>
+            <td>{{ onDateFormat(item.date) }}</td>
+            <td><span class="status" :class="item.status.toLowerCase()">{{ item.status }}</span></td>
+            <td class="right">{{ onCurrency(item.value) }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <footer><span>{{ data.company }}</span><span>Gerado em {{ onDateFormat(data.generatedAt) }}</span></footer>
+</main>

@@ -1,0 +1,56 @@
+{
+  "company": {
+    "initials": "SE",
+    "name": "Sua Empresa Ltda.",
+    "document": "CNPJ 00.000.000/0001-00",
+    "address": "Av. Principal, 1000 · São Paulo/SP",
+    "contact": "financeiro@suaempresa.com.br"
+  },
+  "period": "Julho de 2026",
+  "title": "Demonstrativo mensal",
+  "subtitle": "Resumo das receitas, despesas e resultado líquido do período.",
+  "generatedAt": "2026-07-31",
+  "summary": {
+    "income": 148750,
+    "expense": 98420,
+    "incomeChange": "+12,8% vs. mês anterior",
+    "expenseChange": "+4,2% vs. mês anterior"
+  },
+  "entries": [
+    {
+      "code": "01",
+      "label": "Receita operacional",
+      "value": 142300
+    },
+    {
+      "code": "02",
+      "label": "Outras receitas",
+      "value": 6450
+    },
+    {
+      "code": "03",
+      "label": "Custos operacionais",
+      "value": -52300
+    },
+    {
+      "code": "04",
+      "label": "Despesas administrativas",
+      "value": -28720
+    },
+    {
+      "code": "05",
+      "label": "Impostos e taxas",
+      "value": -17400
+    },
+    {
+      "label": "Resultado líquido",
+      "value": 50330,
+      "total": true
+    }
+  ],
+  "bank": {
+    "name": "Banco Exemplo",
+    "agency": "0001",
+    "account": "12345-6"
+  }
+}

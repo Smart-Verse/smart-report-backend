@@ -1,0 +1,31 @@
+<main class="report">
+    <header>
+        <div class="logo">{{ data.company.initials }}</div>
+        <div class="company"><strong>{{ data.company.name }}</strong><span>{{ data.company.document }}</span></div>
+        <div class="document"><span>Demonstrativo financeiro</span><strong>{{ data.period }}</strong></div>
+    </header>
+    <section class="title"><span>Resultado consolidado</span>
+        <h1>{{ data.title }}</h1>
+        <p>{{ data.subtitle }}</p></section>
+    <section class="balance">
+        <article class="income"><span>Receitas</span><strong>{{ onCurrency(data.summary.income) }}</strong><small>{{
+            data.summary.incomeChange }}</small></article>
+        <article class="expense"><span>Despesas</span><strong>{{ onCurrency(data.summary.expense) }}</strong><small>{{
+            data.summary.expenseChange }}</small></article>
+        <article class="result"><span>Resultado líquido</span><strong>{{
+            onCurrency(data.summary.income-data.summary.expense) }}</strong><small>{{
+            margin(data.summary.income,data.summary.expense) }}% de margem</small></article>
+    </section>
+    <section class="statement">
+        <div class="statement-head"><h2>Demonstrativo de resultados</h2><span>Valores em BRL</span></div>
+        <div class="row" v-for="item in data.entries" :key="item.label" :class="{total:item.total}">
+            <div><span v-if="item.code">{{ item.code }}</span><strong>{{ item.label }}</strong></div>
+            <span :class="{negative:item.value<0}">{{ onCurrency(item.value) }}</span></div>
+    </section>
+    <section class="payment">
+        <div><span>Dados bancários</span><strong>{{ data.bank.name }}</strong>
+            <p>Agência {{ data.bank.agency }} · Conta {{ data.bank.account }}</p></div>
+        <div class="due"><span>Fechamento</span><strong>{{ onDateFormat(data.generatedAt) }}</strong></div>
+    </section>
+    <footer><span>{{ data.company.address }}</span><span>{{ data.company.contact }}</span></footer>
+</main>
