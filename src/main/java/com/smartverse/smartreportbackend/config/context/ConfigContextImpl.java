@@ -1,5 +1,7 @@
 package com.smartverse.smartreportbackend.config.context;
 
+import com.smartverse.smartreportbackend_gen.enums.EnumConfigContext;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;

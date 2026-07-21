@@ -38,6 +38,12 @@ Enums gerados incluem `Language` e `Theme`. O PostgreSQL usa schemas `<DB_NAME>_
 
 ### Autenticação e tenant
 
+- API Keys são criadas em `POST /createApiKey`, listadas em `GET /getApiKeys` e revogadas em `POST /revokeApiKey`; os contratos são gerados pelo Gonthera e o handler customizado apenas os implementa.
+- O segredo `sr_live_<prefix>_<secret>` é retornado somente na criação; o banco mantém SHA-256 e metadados no schema `admin`.
+- `InterceptorConfig` aceita `X-API-Key` exclusivamente em `POST /generateReport`, resolve o tenant no catálogo admin, define `TenantContext`, migra o schema correspondente e limpa o contexto ao final.
+- Chaves revogadas ou expiradas retornam 401; uso fora do escopo retorna 403.
+
+
 - `AuthenticationHandlerImpl`: `/authenticate` e `/register`.
 - `InterceptorConfig`: valida requisições, define `TenantContext` e dispara migração do tenant.
 - `MultiTenantConnectionProviderImpl`: seleciona o schema da conexão.
@@ -123,3 +129,6 @@ Arquivos customizados diretamente afetados incluem:
 - A troca de tenant exige cuidado para restaurar `TenantContext` em `finally` e evitar reutilização de entidades entre schemas.
 - A filtragem Java tem dialeto limitado; `order` não é aplicado e não existe limite superior gerado para `size`.
 - `spring.main.allow-bean-definition-overriding=true` pode mascarar colisões de beans durante a migração.
+
+- `enumConfigContext` é declarado em `.gonthera/project.json` e gera `EnumConfigContext`; não recriar esse enum manualmente.
+- O interceptor apenas orquestra os fluxos: `ApplicationAuthenticationFlow` autentica usuários/rotas públicas e `IntegrationAuthenticationFlow` autentica `X-API-Key` com escopo de geração.

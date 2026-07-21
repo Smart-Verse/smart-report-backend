@@ -3,7 +3,7 @@ package com.smartverse.smartreportbackend.config.mongo;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import com.smartverse.smartreportbackend.config.context.EnumConfigContext;
+import com.smartverse.smartreportbackend_gen.enums.EnumConfigContext;
 import lombok.Getter;
 
 import javax.inject.Singleton;

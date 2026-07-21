@@ -1,7 +1,7 @@
 package com.smartverse.smartreportbackend.config.registryservice;
 
 
-import com.smartverse.smartreportbackend.config.context.EnumConfigContext;
+import com.smartverse.smartreportbackend_gen.enums.EnumConfigContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
