@@ -628,6 +628,439 @@
         }
       ],
       "classExtends": ""
+    },
+    {
+      "entityName": "subscriptionPlan",
+      "tableName": "subscription_plan",
+      "onlyDTO": false,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "id",
+          "fieldName": "id",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "code",
+          "fieldName": "code",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "name",
+          "fieldName": "name",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "description",
+          "fieldName": "description",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "monthlyPrice",
+          "fieldName": "monthlyPrice",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "decimal",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "apiMonthlyLimit",
+          "fieldName": "apiMonthlyLimit",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "customPlan",
+          "fieldName": "customPlan",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "boolean",
+            "required": true,
+            "valueDefault": "false"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "active",
+          "fieldName": "active",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "boolean",
+            "required": true,
+            "valueDefault": "true"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "displayOrder",
+          "fieldName": "displayOrder",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
+    },
+    {
+      "entityName": "tenantSubscription",
+      "tableName": "tenant_subscription",
+      "onlyDTO": false,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "id",
+          "fieldName": "id",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "tenant",
+          "fieldName": "tenant",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "planCode",
+          "fieldName": "planCode",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "startedAt",
+          "fieldName": "startedAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
+    },
+    {
+      "entityName": "apiMonthlyUsage",
+      "tableName": "api_monthly_usage",
+      "onlyDTO": false,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "id",
+          "fieldName": "id",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "tenant",
+          "fieldName": "tenant",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "period",
+          "fieldName": "period",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "amount",
+          "fieldName": "amount",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
+    },
+    {
+      "entityName": "planOption",
+      "tableName": "",
+      "onlyDTO": true,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "id",
+          "fieldName": "id",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "code",
+          "fieldName": "code",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "name",
+          "fieldName": "name",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "description",
+          "fieldName": "description",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "monthlyPrice",
+          "fieldName": "monthlyPrice",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "decimal",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "apiMonthlyLimit",
+          "fieldName": "apiMonthlyLimit",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "customPlan",
+          "fieldName": "customPlan",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "boolean",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "currentPlan",
+          "fieldName": "currentPlan",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "boolean",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
+    },
+    {
+      "entityName": "apiUsageHistoryItem",
+      "tableName": "",
+      "onlyDTO": true,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "period",
+          "fieldName": "period",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "amount",
+          "fieldName": "amount",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
     }
   ],
   "endpoints": [
@@ -906,6 +1339,53 @@
             "parameterName": "result",
             "parameterType": "boolean",
             "list": false
+          }
+        ]
+      }
+    },
+    {
+      "methodName": "getPlanOverview",
+      "httpMethod": "GET",
+      "grouper": "",
+      "metadata": {
+        "anonymous": false,
+        "input": [],
+        "output": [
+          {
+            "parameterName": "currentPlan",
+            "parameterType": "planOption",
+            "list": false
+          },
+          {
+            "parameterName": "plans",
+            "parameterType": "planOption",
+            "list": true
+          },
+          {
+            "parameterName": "apiUsed",
+            "parameterType": "int",
+            "list": false
+          },
+          {
+            "parameterName": "apiRemaining",
+            "parameterType": "int",
+            "list": false
+          }
+        ]
+      }
+    },
+    {
+      "methodName": "getApiUsageHistory",
+      "httpMethod": "GET",
+      "grouper": "",
+      "metadata": {
+        "anonymous": false,
+        "input": [],
+        "output": [
+          {
+            "parameterName": "history",
+            "parameterType": "apiUsageHistoryItem",
+            "list": true
           }
         ]
       }

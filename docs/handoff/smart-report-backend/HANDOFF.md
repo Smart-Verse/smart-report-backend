@@ -1,62 +1,55 @@
 # smart-report-backend — Handoff
 
-## Responsabilidade
+## Responsabilidade e stack
 
-API principal do SmartReport. Autentica usuários, resolve o tenant, executa migrações por schema, mantém os cadastros relacionais, persiste templates no MongoDB e coordena a geração de PDF pelo `smart-report-core`.
+API do SmartReport: autenticação, tenant, CRUD relacional, conteúdo MongoDB e orquestração do PDF.
 
-## Stack
+- Java 25, Spring Boot 3.5.16, Spring Cloud 2025.0.2.
+- Gonthera CLI 2.0.1.
+- PostgreSQL/JPA/Flyway e MongoDB síncrono.
+- Feign para o core em `http://localhost:5071/report`.
 
-> A build exige um JDK 25 completo, incluindo `javac`. O runtime Java isolado não é suficiente.
+## Gonthera
 
-- Java 25, Spring Boot 3.5.16 e Spring Cloud 2025.0.2.
-- Spring MVC, Data JPA, HATEOAS, OpenFeign e SpringDoc.
-- PostgreSQL + Flyway para dados relacionais e schemas por tenant.
-- MongoDB driver síncrono para conteúdo dos templates e inscrições beta.
-- `authorization-backend:1.0.2` para JWT, tenant e anotações de anonimato.
-- Gonthera CLI Maven plugin `2.0.1` para código `_gen`.
+`.gonthera/project.json` é a fonte de verdade. A saída fica em `src/main/java/com/smartverse/smartreportbackend_gen` e recursos gerados em `src/main/resources`.
 
-## Modelo de dados
+Entidades: `userConfiguration`, `userConfirmation`, `repository`, `report`, `apiKey`; DTOs públicos de API Key usam `onlyDTO`. Enums incluem `Theme`, `Language`, `EnumConfigContext` e `ReportTemplate`.
 
-Entidades declaradas em `.gonthera/project.json`:
+Nunca editar `_gen`. Ler `docs/skill/entity-generator-project/SKILL.md` antes de alterar artefatos gerados.
 
-- `repository`: agrupador de relatórios;
-- `report`: nome, quantidade gerada e relacionamento one-to-one com repository;
-- `userConfiguration`: nome, foto, tema, idioma, email e hash do usuário;
-- `userConfirmation`: confirmação de cadastro.
+```bash
+./mvnw gonthera-cli:validate
+./mvnw gonthera-cli:generate-sources
+./mvnw -DskipTests clean compile
+```
 
-Enums gerados incluem `Language` e `Theme`. O PostgreSQL usa schemas `<DB_NAME>_<TENANT>`. Templates são documentos MongoDB em coleção nomeada com o tenant em minúsculas.
+## Autenticação e tenant
 
-## Fluxos principais
+`InterceptorConfig` apenas orquestra e limpa `TenantContext`.
 
-### Template e PDF
+- `ApplicationAuthenticationFlow`: JWT, rotas públicas e tenant humano.
+- `IntegrationAuthenticationFlow`: `X-API-Key`, escopo e tenant de integração.
+- `ApiKeyHandler` implementa `CreateApiKey`, `GetApiKeys` e `RevokeApiKey` gerados.
+- `ApiKeyBusinessService` estende o service abstrato gerado.
+- O segredo `sr_live_<prefix>_<secret>` aparece uma vez; somente hash SHA-256 é persistido no admin.
+- A chave só pode chamar `POST /generateReport`.
 
-- `GeneratorReport` implementa os endpoints gerados `SaveTemplate`, `GetTemplate`, `GenerateReport` e `GetMetrics`.
-- `ReportService` grava/busca o documento do template no MongoDB.
-- Na geração, o serviço carrega as propriedades, monta o conteúdo e chama `ReportClient`.
-- `ReportClient` envia `POST http://localhost:5071/report` ao core.
-- A contagem/métricas usa PostgreSQL e é devolvida pelos endpoints gerados.
+Schemas PostgreSQL seguem `<DB_NAME>_<TENANT>`; coleções MongoDB usam tenant em minúsculas. Migrar o schema antes de acessar e nunca transportar entidades entre tenants.
 
-### Autenticação e tenant
+## Relatórios e modelos
 
-- API Keys são criadas em `POST /createApiKey`, listadas em `GET /getApiKeys` e revogadas em `POST /revokeApiKey`; os contratos são gerados pelo Gonthera e o handler customizado apenas os implementa.
-- O segredo `sr_live_<prefix>_<secret>` é retornado somente na criação; o banco mantém SHA-256 e metadados no schema `admin`.
-- `InterceptorConfig` aceita `X-API-Key` exclusivamente em `POST /generateReport`, resolve o tenant no catálogo admin, define `TenantContext`, migra o schema correspondente e limpa o contexto ao final.
-- Chaves revogadas ou expiradas retornam 401; uso fora do escopo retorna 403.
+`ReportService` salva conteúdo no MongoDB, monta o HTML e chama `ReportClient`. O campo gerado `Report.templateType` seleciona os arquivos em `src/main/resources/models/template`:
 
+- `standard.*`: executivo;
+- `list.*`: listagem;
+- `chart.*`: métricas e gráfico CSS/Vue;
+- `financial.*`: demonstrativo financeiro.
 
-- `AuthenticationHandlerImpl`: `/authenticate` e `/register`.
-- `InterceptorConfig`: valida requisições, define `TenantContext` e dispara migração do tenant.
-- `MultiTenantConnectionProviderImpl`: seleciona o schema da conexão.
-- `DBMigration`: aplica Flyway no schema do tenant.
-- `UserConfirmation`: confirma cadastro e cria/migra o tenant.
+Cada modelo possui HTML, CSS, JS e JSON. `base.*` permanece compatível com o modelo padrão. Flyway adiciona `template_type` com padrão ordinal 0.
 
-### Metadados
+Endpoints relevantes: `saveTemplate`, `getTemplate`, `generateReport`, `getMetrics`, `createApiKey`, `getApiKeys`, `revokeApiKey`.
 
-`MetadataHandler` expõe `/metadata`, consumido pelo frontend para construir formulários dinâmicos.
-
-## Configuração local
-
-Variáveis documentadas no projeto:
+## Configuração
 
 ```text
 DATABASE_SCHEMA_NAME=smartreport
@@ -70,65 +63,31 @@ MONGO_USER=smartreport
 MONGO_PASSWORD=password
 ```
 
-Executar:
+Swagger: `http://localhost:5070/smartreport/swagger-ui/index.html`.
 
-```bash
-./mvnw spring-boot:run
-```
+## Riscos
 
-Swagger esperado em `http://localhost:5070/smartreport/swagger-ui/index.html`.
+- Build real exige JDK 25 completo.
+- Surefire pula testes no POM; compile não representa cobertura funcional.
+- URL do core e algumas configurações ainda são fixas.
+- `spring.main.allow-bean-definition-overriding=true` pode esconder colisões.
+- Trocas de tenant exigem restauração em `finally` ou no fim da requisição.
 
-## Geração Gonthera
+Regras completas do workspace: `docs/skill/smart-report-project/SKILL.md`.
 
-Fonte de verdade: `.gonthera/project.json`. Saída gerada: `src/main/java/com/smartverse/smartreportbackend_gen` e recursos gerados em `src/main/resources`.
+## Planos e consumo de API
 
-Comandos corretos:
+O catálogo é centralizado no schema `admin`:
 
-```bash
-./mvnw gonthera-cli:validate
-./mvnw gonthera-cli:generate-sources
-```
+- `subscription_plan`: nome, descrição, preço, franquia, ordem, situação e indicador de plano personalizado;
+- `tenant_subscription`: plano vigente de cada tenant;
+- `api_monthly_usage`: contador por tenant e período `YYYY-MM`.
 
-Nunca trate `_gen` como fonte manual: regeneração substitui esses arquivos.
+A migração `V20260721210000001__Create_subscription_catalog.sql` semeia os valores comerciais iniciais. Eles podem ser administrados diretamente no catálogo, sem rebuild do frontend. Tenants sem vínculo recebem `FREE`.
 
-## Estado da migração em 2026-07-21
+`PlanBusinessService` troca temporariamente para o tenant administrativo, restaura o contexto em `finally`, calcula o overview e incrementa o consumo em transação. `IntegrationAuthenticationFlow` contabiliza somente a geração autenticada por `X-API-Key`; criação de templates e visualização humana pelo Studio não consomem franquia. Limite excedido retorna HTTP 402.
 
-O worktree já contém mudanças do usuário: `properties.json` foi movido para `.gonthera/project.json`, o plugin passou a `2.0.1`, há diversos arquivos customizados modificados e uma árvore `_gen` nova ainda não rastreada. Preserve tudo durante a correção.
+O contrato público gerado `GET getPlanOverview` é implementado por `PlanHandler`. As entidades `subscriptionPlan`, `tenantSubscription`, `apiMonthlyUsage` e o DTO `planOption` têm controllers CRUD padrão desabilitados.
 
-Quebras previstas pela skill `docs/skill/entity-generator-project/SKILL.md`:
+`GET getApiUsageHistory` retorna os registros de `api_monthly_usage` do tenant autenticado em ordem decrescente de período, usando o DTO-only gerado `apiUsageHistoryItem`.
 
-- imports e heranças antigos de `handlers/*Handler` devem migrar para `controllers/*Controller`;
-- regras CRUD, repositórios, conversores, filtros e transações agora estão nos `*Service` gerados;
-- `generateDefaultHandlers` e `handlerAbstract` ainda aparecem no JSON, mas estão depreciados;
-- `UserConfigurationController` e `ReportController` são abstratos na configuração atual e exigem subclasses concretas;
-- configurações de service abstrato precisam de uma única subclasse `@Service` fora de `_gen`;
-- entidades com controller concreto não podem ter outro controller expondo os mesmos mappings.
-
-Arquivos customizados diretamente afetados incluem:
-
-- `handlers/reports/ReportHandlerImpl.java`;
-- `handlers/userconfiguration/UserConfigurationHandlerImpl.java`;
-- repositórios customizados que estendem interfaces geradas;
-- handlers de endpoints que importam contratos de `smartreportbackend_gen.endpoints`.
-
-## Estratégia de correção
-
-1. Rodar validação e compilação para obter a lista real de falhas.
-2. Atualizar as flags do JSON para os nomes novos, decidindo separadamente controller e service abstratos.
-3. Regenerar com `generate-sources`.
-4. Corrigir apenas código customizado; não editar `_gen`.
-5. Manter HTTP nos controllers/endpoints e regras de negócio/persistência em services.
-6. Confirmar que existe um único bean por service abstrato e nenhum mapping duplicado.
-7. Validar os contratos usados pelo Angular e a chamada ao core.
-
-## Limitações e riscos existentes
-
-- O POM pula testes via Surefire; uma compilação bem-sucedida não representa cobertura funcional.
-- `ReportClient` tem URL fixa, dificultando ambientes diferentes.
-- O segredo de API e as configurações RabbitMQ estão fixos em `application.properties`.
-- A troca de tenant exige cuidado para restaurar `TenantContext` em `finally` e evitar reutilização de entidades entre schemas.
-- A filtragem Java tem dialeto limitado; `order` não é aplicado e não existe limite superior gerado para `size`.
-- `spring.main.allow-bean-definition-overriding=true` pode mascarar colisões de beans durante a migração.
-
-- `enumConfigContext` é declarado em `.gonthera/project.json` e gera `EnumConfigContext`; não recriar esse enum manualmente.
-- O interceptor apenas orquestra os fluxos: `ApplicationAuthenticationFlow` autentica usuários/rotas públicas e `IntegrationAuthenticationFlow` autentica `X-API-Key` com escopo de geração.

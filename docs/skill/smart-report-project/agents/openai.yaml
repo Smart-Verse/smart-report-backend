@@ -1,0 +1,4 @@
+interface:
+  display_name: "SmartReport Project"
+  short_description: "Maintain SmartReport architecture and conventions"
+  default_prompt: "Use $smart-report-project to implement this SmartReport change following its architecture and validation rules."

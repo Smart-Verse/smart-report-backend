@@ -4,6 +4,7 @@ import com.potatotech.authorization.exception.ServiceException;
 import com.potatotech.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.config.migration.DBMigration;
 import com.smartverse.smartreportbackend.services.apikey.ApiKeyBusinessService;
+import com.smartverse.smartreportbackend.services.plan.PlanBusinessService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -12,10 +13,13 @@ import org.springframework.stereotype.Component;
 public class IntegrationAuthenticationFlow {
     private final ApiKeyBusinessService apiKeyService;
     private final DBMigration dbMigration;
+    private final PlanBusinessService planService;
 
-    public IntegrationAuthenticationFlow(ApiKeyBusinessService apiKeyService, DBMigration dbMigration) {
+    public IntegrationAuthenticationFlow(ApiKeyBusinessService apiKeyService, DBMigration dbMigration,
+                                         PlanBusinessService planService) {
         this.apiKeyService = apiKeyService;
         this.dbMigration = dbMigration;
+        this.planService = planService;
     }
 
     public boolean hasCredentials(HttpServletRequest request) {
@@ -29,6 +33,7 @@ public class IntegrationAuthenticationFlow {
         }
 
         var authenticatedKey = apiKeyService.authenticate(request.getHeader(ApiKeyBusinessService.HEADER_NAME));
+        planService.consumeApiRequest(authenticatedKey.tenant());
         activateTenant(authenticatedKey.tenant());
         return true;
     }
