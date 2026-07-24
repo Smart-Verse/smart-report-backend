@@ -1,54 +1,46 @@
 package com.smartverse.smartreportbackend.services.email;
 
-import com.smartverse.smartreportbackend.common.FileCommon;
 import com.smartverse.smartreportbackend_gen.authorization.exception.ServiceException;
-import org.springframework.beans.factory.annotation.Value;
+
+import com.smartverse.smartreportbackend.common.FileCommon;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientResponseException;
 
 @Service
 public class EmailService {
 
-    private final RestClient resend;
-    private final String from;
+    @Autowired
+    private JavaMailSender mailSender;
 
-    public EmailService(RestClient.Builder builder,
-                        @Value("${resend.api-key}") String apiKey,
-                        @Value("${resend.from}") String from) {
-        this.resend = builder
-                .baseUrl("https://api.resend.com")
-                .defaultHeader("Authorization", "Bearer " + apiKey)
-                .build();
-        this.from = from;
+    public void sendEmail(String to, String subject, String model) throws jakarta.mail.MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(model, true);
+        helper.setFrom("geovane.araujo@dataon.com.br");
+
+        mailSender.send(mimeMessage);
     }
 
-    public String sendEmail(String to, String subject, String html, String idempotencyKey) {
-        try {
-            var response = resend.post()
-                    .uri("/emails")
-                    .header("Idempotency-Key", idempotencyKey)
-                    .body(new ResendEmailRequest(from, to, subject, html))
-                    .retrieve()
-                    .body(ResendEmailResponse.class);
-            if (response == null || response.id() == null || response.id().isBlank()) {
-                throw new ServiceException(HttpStatus.BAD_GATEWAY, "Resend returned an invalid response");
-            }
-            return response.id();
-        } catch (RestClientResponseException exception) {
-            throw new ServiceException(HttpStatus.BAD_GATEWAY,
-                    "Unable to send confirmation email through Resend");
+
+    public void loadAndSendEmail(String to, String subject, String modelName)  {
+        try{
+            var emailModel = loadModel(modelName);
+            sendEmail(to,subject,emailModel);
+        }catch ( MessagingException e){
+            throw new ServiceException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
 
-    public String loadModel(String modelName) {
+
+    public String loadModel(String modelName){
         return FileCommon.loadMod(modelName);
     }
 
-    private record ResendEmailRequest(String from, String to, String subject, String html) {
-    }
-
-    private record ResendEmailResponse(String id) {
-    }
 }

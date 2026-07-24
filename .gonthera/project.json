@@ -1391,17 +1391,6 @@
       }
     }
   ],
-  "messaging": {
-    "RabbitMq": {
-      "pub": [],
-      "sub": [
-        {
-          "name": "paymentConfirmed",
-          "queue": "smart.payment.confirmed.report"
-        }
-      ]
-    }
-  },
   "enums": [
     {
       "enumName": "theme",

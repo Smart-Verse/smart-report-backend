@@ -14,7 +14,6 @@ import com.smartverse.smartreportbackend.services.email.EmailService;
 import com.smartverse.smartreportbackend_gen.entities.UserConfirmationEntity;
 import com.smartverse.smartreportbackend_gen.repositories.UserConfirmationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,9 +24,6 @@ import java.util.UUID;
 
 @Service
 public class AuthenticationService {
-
-    @Value("${app.frontend.base-url}")
-    private String frontendBaseUrl;
 
     @Autowired
     AuthenticationRepository authenticationRepository;
@@ -99,15 +95,13 @@ public class AuthenticationService {
         userConfirmation = userConfirmationRepository.save(userConfirmation);
 
         var emailcontent = emailService.loadModel("register");
-        emailcontent = emailcontent.replace("{{url}}", String.format(
-                "%s/#/register-confirmation/%s",
-                frontendBaseUrl.replaceAll("/+$", ""),
-                userConfirmation.getHash()));
-        emailService.sendEmail(
-                user.getEmail(),
-                "Confirmação de conta — SmartReport",
-                emailcontent,
-                "account-confirmation/" + userConfirmation.getHash());
+        emailcontent = emailcontent.replace("{{url}}",String.format("http://localhost:4200/#/register-confirmation/%s",userConfirmation.getHash()));
+
+        try{
+            //emailService.sendEmail(user.getEmail(),"Confirmação de email",emailcontent);
+        } catch (Exception e){
+            throw new ServiceException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
 
         return true;
     }
