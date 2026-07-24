@@ -1,0 +1,5 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: #f8fafc; color: #0f172a; font-family: Arial, sans-serif; }
+.report { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 16mm; background: #fff; }
+@media print { body { background: #fff; } .report { margin: 0; } }
