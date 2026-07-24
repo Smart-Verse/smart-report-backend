@@ -284,6 +284,34 @@
             "nullable": false,
             "key": false
           }
+        },
+        {
+          "comment": "Formato da página",
+          "fieldName": "pageFormat",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "pageFormat",
+            "required": true,
+            "valueDefault": "A4"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "Orientação da página",
+          "fieldName": "pageOrientation",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "pageOrientation",
+            "required": true,
+            "valueDefault": "PORTRAIT"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
         }
       ],
       "classExtends": ""
@@ -2067,6 +2095,16 @@
             "parameterName": "idreport",
             "parameterType": "uuid",
             "list": false
+          },
+          {
+            "parameterName": "pageFormat",
+            "parameterType": "pageFormat",
+            "list": false
+          },
+          {
+            "parameterName": "pageOrientation",
+            "parameterType": "pageOrientation",
+            "list": false
           }
         ],
         "output": [
@@ -2142,6 +2180,16 @@
           {
             "parameterName": "idreport",
             "parameterType": "uuid",
+            "list": false
+          },
+          {
+            "parameterName": "pageFormat",
+            "parameterType": "pageFormat",
+            "list": false
+          },
+          {
+            "parameterName": "pageOrientation",
+            "parameterType": "pageOrientation",
             "list": false
           }
         ]
@@ -2292,7 +2340,9 @@
         "STANDARD",
         "LIST",
         "CHART",
-        "FINANCIAL"
+        "FINANCIAL",
+        "LANDSCAPE",
+        "SALES_RECEIPT"
       ]
     },
     {
@@ -2311,6 +2361,31 @@
         "FAILED",
         "CANCELLED",
         "EXPIRED"
+      ]
+    },
+    {
+      "enumName": "pageFormat",
+      "values": [
+        "A4",
+        "A3",
+        "A5",
+        "A6",
+        "LETTER",
+        "LEGAL",
+        "TABLOID",
+        "LEDGER",
+        "A0",
+        "A1",
+        "A2",
+        "THERMAL_58MM",
+        "THERMAL_80MM"
+      ]
+    },
+    {
+      "enumName": "pageOrientation",
+      "values": [
+        "PORTRAIT",
+        "LANDSCAPE"
       ]
     }
   ],

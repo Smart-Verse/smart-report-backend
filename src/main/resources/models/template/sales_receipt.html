@@ -1,0 +1,61 @@
+<main class="receipt">
+    <header>
+        <div class="logo">{{ data.company.initials }}</div>
+        <h1>{{ data.company.name }}</h1>
+        <p>{{ data.company.document }}</p>
+        <p>{{ data.company.address }}</p>
+        <p>{{ data.company.phone }}</p>
+    </header>
+
+    <div class="separator"></div>
+    <section class="document-info">
+        <div><span>COMPROVANTE DE VENDA</span><strong>#{{ data.sale.number }}</strong></div>
+        <p>{{ onDateTime(data.sale.createdAt) }}</p>
+        <p>Operador: {{ data.sale.operator }} · Caixa: {{ data.sale.terminal }}</p>
+    </section>
+
+    <div class="separator"></div>
+    <section class="items">
+        <div class="item-head"><span>ITEM</span><span>TOTAL</span></div>
+        <article v-for="(item,index) in data.items" :key="item.code">
+            <div class="item-title"><strong>{{ String(index + 1).padStart(2, '0') }} · {{ item.description }}</strong><strong>{{ onCurrency(itemTotal(item)) }}</strong></div>
+            <p>{{ item.quantity }} {{ item.unit }} × {{ onCurrency(item.unitPrice) }}<span v-if="item.discount"> · desc. {{ onCurrency(item.discount) }}</span></p>
+            <small>Cód. {{ item.code }}</small>
+        </article>
+    </section>
+
+    <div class="separator"></div>
+    <section class="totals">
+        <div><span>Subtotal</span><strong>{{ onCurrency(data.totals.subtotal) }}</strong></div>
+        <div v-if="data.totals.discount"><span>Descontos</span><strong>- {{ onCurrency(data.totals.discount) }}</strong></div>
+        <div v-if="data.totals.delivery"><span>Entrega</span><strong>{{ onCurrency(data.totals.delivery) }}</strong></div>
+        <div class="grand-total"><span>TOTAL</span><strong>{{ onCurrency(data.totals.total) }}</strong></div>
+    </section>
+
+    <section class="payments">
+        <h2>Pagamento</h2>
+        <div v-for="payment in data.payments" :key="payment.method"><span>{{ payment.method }}</span><strong>{{ onCurrency(payment.amount) }}</strong></div>
+        <div v-if="data.totals.change"><span>Troco</span><strong>{{ onCurrency(data.totals.change) }}</strong></div>
+    </section>
+
+    <div class="separator"></div>
+    <section class="customer" v-if="data.customer">
+        <h2>Cliente</h2>
+        <strong>{{ data.customer.name }}</strong>
+        <p>{{ data.customer.document }}</p>
+    </section>
+
+    <section class="transaction">
+        <p>Transação: {{ data.sale.transaction }}</p>
+        <p>Autorização: {{ data.sale.authorization }}</p>
+        <div class="barcode" aria-hidden="true"></div>
+        <small>{{ data.sale.accessKey }}</small>
+    </section>
+
+    <footer>
+        <strong>{{ data.messages.title }}</strong>
+        <p>{{ data.messages.subtitle }}</p>
+        <span>Documento sem valor fiscal</span>
+        <span>Gerado com SmartReport</span>
+    </footer>
+</main>

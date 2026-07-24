@@ -1,0 +1,13 @@
+{
+  "company": {"initials": "SV", "name": "SmartVerse Store", "document": "CNPJ 12.345.678/0001-90", "address": "Av. das Soluções, 1000 · São Paulo/SP", "phone": "(11) 4000-1234"},
+  "sale": {"number": "000184", "createdAt": "2026-07-24T13:18:00", "operator": "Marina", "terminal": "02", "transaction": "TXN-20260724-88421", "authorization": "739184", "accessKey": "3526 0712 3456 7800 0190 6500 1000 0184 0018 4921"},
+  "customer": {"name": "João da Silva", "document": "CPF 123.***.***-09"},
+  "items": [
+    {"code": "78910001", "description": "Camiseta SmartVerse Premium", "quantity": 2, "unit": "UN", "unitPrice": 79.90, "discount": 10.00},
+    {"code": "78910018", "description": "Caneca Térmica 500 ml", "quantity": 1, "unit": "UN", "unitPrice": 64.90, "discount": 0},
+    {"code": "78910025", "description": "Adesivo holográfico", "quantity": 3, "unit": "UN", "unitPrice": 8.00, "discount": 0}
+  ],
+  "totals": {"subtotal": 248.70, "discount": 10.00, "delivery": 0, "total": 238.70, "change": 0},
+  "payments": [{"method": "PIX", "amount": 238.70}],
+  "messages": {"title": "Obrigado pela preferência!", "subtitle": "Guarde este comprovante para trocas e atendimento."}
+}

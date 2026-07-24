@@ -1,0 +1,22 @@
+{
+  "company": {"initials": "SV", "name": "SmartVerse Comércio", "document": "CNPJ 12.345.678/0001-90", "contact": "comercial@smartverse.com.br"},
+  "document": {"type": "Relatório comercial", "title": "Performance regional", "subtitle": "Visão consolidada das metas, vendas e eficiência por unidade.", "period": "Julho de 2026", "generatedAt": "2026-07-24", "reference": "COM-2026-07"},
+  "metrics": [
+    {"label": "Receita total", "value": "R$ 684.920", "detail": "+14,8% no período", "positive": true},
+    {"label": "Pedidos", "value": "2.486", "detail": "+9,2% no período", "positive": true},
+    {"label": "Ticket médio", "value": "R$ 275,51", "detail": "+5,1% no período", "positive": true},
+    {"label": "Meta consolidada", "value": "92%", "detail": "8 pontos para a meta", "positive": false}
+  ],
+  "units": [
+    {"name": "São Paulo", "region": "Sudeste", "owner": "Marina Costa", "target": 190000, "revenue": 203450, "orders": 724, "averageTicket": 281.01, "status": "Acima"},
+    {"name": "Curitiba", "region": "Sul", "owner": "Rafael Lima", "target": 140000, "revenue": 132800, "orders": 481, "averageTicket": 276.09, "status": "Atenção"},
+    {"name": "Recife", "region": "Nordeste", "owner": "Bianca Alves", "target": 125000, "revenue": 121760, "orders": 453, "averageTicket": 268.79, "status": "Atenção"},
+    {"name": "Goiânia", "region": "Centro-Oeste", "owner": "Carlos Nunes", "target": 110000, "revenue": 118390, "orders": 417, "averageTicket": 283.91, "status": "Acima"},
+    {"name": "Manaus", "region": "Norte", "owner": "Lívia Souza", "target": 105000, "revenue": 108520, "orders": 411, "averageTicket": 264.04, "status": "Acima"}
+  ],
+  "insights": [
+    {"title": "São Paulo lidera", "description": "A unidade superou a meta em 7% e manteve o melhor ticket médio."},
+    {"title": "Potencial no Sul", "description": "Curitiba está próxima da meta; priorize as oportunidades em negociação."},
+    {"title": "Eficiência crescente", "description": "Goiânia combinou volume e ticket acima da média consolidada."}
+  ]
+}

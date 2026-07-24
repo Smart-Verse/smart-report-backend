@@ -11,6 +11,8 @@ import com.smartverse.smartreportbackend_gen.endpoints.GetMetricsOutput;
 import com.smartverse.smartreportbackend_gen.endpoints.GetTemplateOutput;
 import com.smartverse.smartreportbackend_gen.endpoints.SaveTemplateInput;
 import com.smartverse.smartreportbackend_gen.entities.ReportEntity;
+import com.smartverse.smartreportbackend_gen.enums.PageFormat;
+import com.smartverse.smartreportbackend_gen.enums.PageOrientation;
 import com.smartverse.smartreportbackend_gen.repositories.RepositoryRepository;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,23 @@ public class ReportService extends com.smartverse.smartreportbackend_gen.service
     @Override
     @Transactional
     public ReportDTO save(ReportDTO obj) {
+        if (obj.pageFormat == null) obj.pageFormat = PageFormat.A4;
+        if (obj.pageOrientation == null) obj.pageOrientation = PageOrientation.PORTRAIT;
         var saved = super.save(obj);
         saveDefault(dtoConverter.toEntity(saved, null));
         return saved;
     }
 
+
+
+    @Override
+    @Transactional
+    public ReportDTO update(ReportDTO obj, UUID id) {
+        var existing = repository.findById(id).orElseThrow();
+        if (obj.pageFormat == null) obj.pageFormat = existing.getPageFormat();
+        if (obj.pageOrientation == null) obj.pageOrientation = existing.getPageOrientation();
+        return super.update(obj, id);
+    }
 
 
     public void saveDefault(ReportEntity reportEntity){
@@ -67,6 +81,7 @@ public class ReportService extends com.smartverse.smartreportbackend_gen.service
     }
 
     public boolean saveTemplate(SaveTemplateInput input){
+        var reportEntity = reportRepository.findById(input.idreport).orElseThrow();
         var connection = ConnectionMongoDb.getInstance();
         var database = connection.getDatabase();
 
@@ -84,6 +99,12 @@ public class ReportService extends com.smartverse.smartreportbackend_gen.service
 
 
         collection.updateOne(filter,new Document("$set",map));
+
+        if (input.pageFormat != null) reportEntity.setPageFormat(input.pageFormat);
+        if (input.pageOrientation != null) reportEntity.setPageOrientation(input.pageOrientation);
+        if (input.pageFormat != null || input.pageOrientation != null) {
+            reportRepository.save(reportEntity);
+        }
 
         return true;
     }
@@ -104,12 +125,20 @@ public class ReportService extends com.smartverse.smartreportbackend_gen.service
         output.css = foundDocument.get("css").toString();
         output.data = foundDocument.get("data").toString();
         output.idreport = UUID.fromString(foundDocument.get("report").toString());
+        var reportEntity = reportRepository.findById(reportId).orElseThrow();
+        output.pageFormat = reportEntity.getPageFormat() == null
+                ? PageFormat.A4
+                : reportEntity.getPageFormat();
+        output.pageOrientation = reportEntity.getPageOrientation() == null
+                ? PageOrientation.PORTRAIT
+                : reportEntity.getPageOrientation();
 
         return output;
     }
 
     public byte[] generate(UUID idreport, Map data) {
         var templateProperties = this.getTemplate(idreport);
+        var reportEntity = reportRepository.findById(idreport).orElseThrow();
 
         var template = FileCommon.loadFile("index.html","template");
 
@@ -135,6 +164,12 @@ public class ReportService extends com.smartverse.smartreportbackend_gen.service
 
         var report = new LinkedHashMap<String, Object>();
         report.put("report",template);
+        report.put("pageFormat", (reportEntity.getPageFormat() == null
+                ? PageFormat.A4
+                : reportEntity.getPageFormat()).name());
+        report.put("pageOrientation", (reportEntity.getPageOrientation() == null
+                ? PageOrientation.PORTRAIT
+                : reportEntity.getPageOrientation()).name());
 
         return reportClient.getReport(report);
     }

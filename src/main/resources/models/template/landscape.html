@@ -1,0 +1,57 @@
+<main class="report landscape-report">
+    <header class="report-header">
+        <div class="brand-mark">{{ data.company.initials }}</div>
+        <div class="heading">
+            <span class="kicker">{{ data.document.type }}</span>
+            <h1>{{ data.document.title }}</h1>
+            <p>{{ data.document.subtitle }}</p>
+        </div>
+        <div class="company">
+            <strong>{{ data.company.name }}</strong>
+            <span>{{ data.company.document }}</span>
+            <span>{{ data.document.period }}</span>
+        </div>
+    </header>
+
+    <section class="metrics">
+        <article v-for="metric in data.metrics" :key="metric.label">
+            <span>{{ metric.label }}</span>
+            <strong>{{ metric.value }}</strong>
+            <small :class="{positive: metric.positive, negative: metric.positive === false}">{{ metric.detail }}</small>
+        </article>
+    </section>
+
+    <section class="content-grid">
+        <div class="table-card">
+            <div class="section-heading">
+                <div><span>Detalhamento</span><h2>Desempenho por unidade</h2></div>
+                <small>Atualizado em {{ onDateFormat(data.document.generatedAt) }}</small>
+            </div>
+            <table>
+                <thead><tr><th>Unidade</th><th>Responsável</th><th class="right">Meta</th><th class="right">Realizado</th><th>Progresso</th><th class="right">Pedidos</th><th class="right">Ticket médio</th><th>Status</th></tr></thead>
+                <tbody>
+                <tr v-for="unit in data.units" :key="unit.name">
+                    <td><strong>{{ unit.name }}</strong><small>{{ unit.region }}</small></td>
+                    <td>{{ unit.owner }}</td>
+                    <td class="right">{{ onCurrency(unit.target) }}</td>
+                    <td class="right strong-value">{{ onCurrency(unit.revenue) }}</td>
+                    <td><div class="progress"><i :style="{width: progress(unit.revenue, unit.target) + '%'}"></i></div><small>{{ progress(unit.revenue, unit.target) }}%</small></td>
+                    <td class="right">{{ unit.orders }}</td>
+                    <td class="right">{{ onCurrency(unit.averageTicket) }}</td>
+                    <td><span class="status" :class="unit.status.toLowerCase()">{{ unit.status }}</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <aside class="insights-card">
+            <div class="section-heading"><div><span>Análise</span><h2>Destaques</h2></div></div>
+            <article v-for="(insight,index) in data.insights" :key="insight.title">
+                <b>{{ String(index + 1).padStart(2, '0') }}</b>
+                <div><strong>{{ insight.title }}</strong><p>{{ insight.description }}</p></div>
+            </article>
+        </aside>
+    </section>
+
+    <footer><span>{{ data.company.contact }}</span><span>SmartReport · {{ data.document.reference }}</span></footer>
+</main>
