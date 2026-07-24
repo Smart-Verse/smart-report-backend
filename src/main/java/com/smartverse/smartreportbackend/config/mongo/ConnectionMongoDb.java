@@ -6,11 +6,9 @@ import com.mongodb.client.MongoDatabase;
 import com.smartverse.smartreportbackend_gen.enums.EnumConfigContext;
 import lombok.Getter;
 
-import javax.inject.Singleton;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-@Singleton
 public class ConnectionMongoDb {
 
     private static ConnectionMongoDb instance;

@@ -1,42 +1,81 @@
 ---
 name: smart-report-project
-description: Maintain and evolve the SmartReport workspace across its Angular frontend, Spring Boot backend, Gonthera-generated contracts, tenant-aware persistence, API-key integrations, report templates, and Puppeteer PDF renderer. Use when implementing, diagnosing, reviewing, or documenting SmartReport features, generated entities/DTOs/endpoints/enums, authentication, tenant switching, Studio behavior, template presets, API contracts, or cross-project changes.
+description: Maintain, teach, operate, and evolve the SmartReport workspace across its Angular frontend, Spring Boot backend, Gonthera-generated contracts, tenant-aware PostgreSQL and MongoDB persistence, API-key integrations, subscription quotas, editable report templates, Puppeteer PDF renderer, and SmartVerse public site. Use for implementation, onboarding, diagnosis, publication, generated entities/DTOs/endpoints/enums, authentication, tenant switching, Studio behavior, templates, plan consumption, API contracts, or cross-project changes.
 ---
 
 # SmartReport Project
 
-## Start with the workspace
+## Understand the system first
 
-Work from the SmartReport root and inspect the affected project before editing. Preserve existing user changes in dirty worktrees.
+Treat SmartReport as four cooperating applications:
 
-Treat these projects as independent applications:
+- `smart-report-frontend`: Angular 21 SPA used by people.
+- `smart-report-backend`: Java 25 API and source of business rules.
+- `smart-report-core`: isolated Node/Puppeteer PDF renderer.
+- `site-smartverse`: static institutional site and product landings.
 
-- `smart-report-frontend`: Angular 21 SPA, PrimeNG, CodeMirror 6.
-- `smart-report-backend`: Java 25, Spring Boot 3.5, Gonthera CLI, PostgreSQL, MongoDB.
-- `smart-report-core`: Express and Puppeteer PDF renderer.
+Read `HANDOFF.md` and the handoff of every affected project before broad work. Preserve dirty worktrees and unrelated user changes.
 
-Read the root and affected-project handoffs before broad changes:
+Use this request flow as the mental model:
 
-- `HANDOFF.md`
-- `smart-report-backend/docs/handoff/smart-report-backend/HANDOFF.md`
-- `smart-report-frontend/docs/handoff/smart-report-frontend/HANDOFF.md`
-- `smart-report-core/docs/handoff/smart-report-core/HANDOFF.md`
+```text
+Human browser --JWT--> backend --HTML--> core --PDF--> backend --> browser
+External system --X-API-Key + JSON--> backend --HTML--> core --PDF base64--> external system
+```
 
-## Follow the generator contract
+Store relational metadata in PostgreSQL tenant schemas. Store editable template content in tenant-named MongoDB collections. Store shared security and commercial catalogs in the admin schema.
 
-Before any backend change involving an entity, DTO, enum, repository, service, CRUD controller, endpoint input/output, or generated metadata, read `../entity-generator-project/SKILL.md` completely.
+## Run the workspace
 
-Use `.gonthera/project.json` as the only source of truth for generated artifacts.
+Use JDK 25 for the backend.
 
-- Declare entities, DTO-only models, enums, fields, relationships, and endpoint contracts there.
-- Use `onlyDTO: true` for public response shapes that must not expose persistence fields.
-- Use `generateDefaultControllers: false` when HTTP behavior is custom or CRUD must not be exposed.
-- Use `serviceAbstract: true` only when exactly one custom Spring service will extend the generated service.
-- Extend generated repositories for custom queries instead of recreating the base repository.
-- Implement generated endpoint interfaces in custom handlers outside `_gen`.
-- Never manually edit or duplicate files under `smartreportbackend_gen`.
+```bash
+# terminal 1
+cd smart-report-core
+npm install
+node index.js
 
-Run, in this order:
+# terminal 2
+cd smart-report-backend
+./mvnw spring-boot:run
+
+# terminal 3
+cd smart-report-frontend
+npm install
+npm start
+```
+
+Configure at least:
+
+```text
+DATABASE_SCHEMA_NAME=smartreport
+DB_NAME=POSTGRES
+DB_USERNAME=postgres
+DB_PASSWORD=<password>
+SECRET_JWT=<strong-secret>
+SERVER_PORT=5070
+SERVICE_NAME=smartreport
+MONGO_USER=smartreport
+MONGO_PASSWORD=<password>
+```
+
+Use `http://localhost:5070/smartreport/swagger-ui/index.html` for local API inspection. Production API base is `https://app.smartverse.com.br/api/smartreport`.
+
+## Change generated backend contracts correctly
+
+Read `../entity-generator-project/SKILL.md` completely before changing an entity, DTO, enum, generated repository/service/controller, or endpoint contract.
+
+Treat `.gonthera/project.json` as the only source of truth.
+
+1. Declare the entity, DTO, enum, relationship, or endpoint in `.gonthera/project.json`.
+2. Set `onlyDTO: true` for response shapes without persistence.
+3. Set `generateDefaultControllers: false` for admin tables, security data, custom behavior, or anything that must not expose CRUD.
+4. Set `serviceAbstract: true` only when one custom service must extend the generated service.
+5. Validate before generation.
+6. Generate sources.
+7. Implement behavior outside `smartreportbackend_gen`.
+8. Add an explicit Flyway migration.
+9. Compile and inspect the generated interface/DTO.
 
 ```bash
 mvn gonthera-cli:validate
@@ -44,104 +83,221 @@ mvn gonthera-cli:generate-sources
 mvn -DskipTests clean compile
 ```
 
-Use JDK 25 for the real build. A temporary `-Djava.version=17` override is only an environment workaround and must not change the POM target.
+Never edit `smartreportbackend_gen`. Regeneration deletes and recreates it.
 
-## Preserve architecture boundaries
+For a custom endpoint:
 
-Keep HTTP adaptation in handlers/controllers and business/persistence rules in services.
+1. Add the endpoint input/output to Gonthera.
+2. Generate the interface.
+3. Create a handler under `handlers/<domain>` implementing that interface.
+4. Put business rules in `services/<domain>`.
+5. Extend the generated repository under `repository/<domain>` for custom queries.
+6. Return DTO-only outputs when persistence fields must remain private.
 
-- Generated interfaces own custom endpoint annotations and request/response contracts.
-- Custom handlers map generated input/output objects and delegate.
-- Custom services may extend abstract generated services.
-- Custom repositories may extend generated repositories and use `@Primary` when both are discovered.
-- Flyway migrations remain explicit deployment artifacts even when `postgree.sql` is regenerated.
+For a new entity field:
 
-Do not expose secret hashes, internal tenant catalog fields, or persistence-only DTOs in public responses.
+1. Add it to Gonthera.
+2. Regenerate.
+3. Add a forward-only Flyway migration.
+4. Update converters/custom services and Angular contracts.
+5. Never rely only on regenerated `postgree.sql` for an existing deployment.
 
-## Handle authentication and tenant safely
+## Preserve business boundaries
 
-Keep `InterceptorConfig` as a small orchestrator.
+Keep handlers thin. Let handlers adapt HTTP and delegate. Put transactions, validation, tenant switching, and persistence orchestration in services.
 
-- `ApplicationAuthenticationFlow` owns JWT, anonymous routes, login/register, and human tenant resolution.
-- `IntegrationAuthenticationFlow` owns `X-API-Key`, integration scope, and tenant activation.
-- API keys may authenticate only `POST /generateReport`.
-- Store API-key metadata and SHA-256 hashes in the admin catalog; reveal plaintext only at creation.
-- Resolve the real tenant before report data access.
-- Call tenant migration before accessing a tenant schema.
-- Restore or clear `TenantContext` in `finally`/request completion paths.
-- Never carry JPA entities across tenant switches or reuse persistence context state between schemas.
+Extend generated repositories instead of duplicating them. Add `@Primary` when Spring discovers both generated and custom repository types.
 
-Generate `EnumConfigContext` from the `enumConfigContext` entry; never recreate it manually.
+Do not expose entity objects for API Keys, subscription catalog internals, secret hashes, or administrative tables.
+
+## Authenticate and resolve tenant safely
+
+Keep `InterceptorConfig` small:
+
+- delegate JWT requests to `ApplicationAuthenticationFlow`;
+- delegate `X-API-Key` requests to `IntegrationAuthenticationFlow`;
+- clear `TenantContext` after every request.
+
+Human flow:
+
+1. Allow only explicitly public authentication/registration/verification routes.
+2. Validate the Authorization bearer token.
+3. Read tenant from the authenticated user.
+4. migrate/activate that tenant.
+
+Integration flow:
+
+1. Detect `X-API-Key`.
+2. Reject every route except `POST /generateReport`.
+3. Hash and authenticate the key in the admin catalog.
+4. validate expiry/revocation.
+5. enforce and reserve monthly quota.
+6. activate the key owner tenant.
+7. generate the report.
+
+Never accept the effective tenant from public request data. Never carry JPA entities across a tenant switch. Restore the previous context in `finally`.
+
+Keep the API Key format `sr_live_<prefix>_<secret>`. Show plaintext only after creation and persist only SHA-256 plus metadata.
+
+## Work with PostgreSQL and MongoDB
+
+Use PostgreSQL schemas named `<DB_NAME>_<TENANT>`. Run `DBMigration.loadMigrateTenants(tenant)` before accessing a new schema.
+
+Use the admin schema for:
+
+- authentication users;
+- API-key catalog;
+- subscription plans;
+- tenant subscriptions;
+- monthly API usage.
+
+Use MongoDB collection `tenant.toLowerCase()` for HTML, CSS, JavaScript and JSON template content.
+
+When temporarily selecting admin:
+
+```java
+var previous = TenantContext.getCurrentTenant();
+try {
+    TenantContext.setCurrentTenant("admin");
+    // migrate and execute admin operation
+} finally {
+    TenantContext.setCurrentTenant(previous);
+}
+```
+
+Do not omit the restoration even when the operation appears request-scoped.
+
+## Maintain subscriptions and quotas
+
+Keep `subscription_plan`, `tenant_subscription`, and `api_monthly_usage` generated with default controllers disabled.
+
+Treat Flyway seeds as initial configuration and database rows as runtime truth. Never hardcode price, description, limit, or display order in Angular.
+
+Rules:
+
+- default missing subscriptions to `FREE`;
+- keep template creation/editing unlimited;
+- count only report generation authenticated by API Key;
+- do not count Studio/JWT previews;
+- partition counters by tenant and `YearMonth`;
+- lock an existing counter row during increment;
+- return HTTP 402 when a finite quota is exhausted;
+- interpret a null custom quota as negotiated/unlimited;
+- list history newest-first;
+- allow authenticated legacy/admin accounts to read their overview;
+- never expose catalog CRUD publicly.
+
+Before horizontal scaling, replace first-counter creation with a database upsert or retry on the unique `(tenant, period)` constraint.
 
 ## Maintain report templates
 
-Store editable preset files in `smart-report-backend/src/main/resources/models/template`.
+Store presets under `src/main/resources/models/template`. Keep matching `.html`, `.css`, `.js`, and `.json` files for:
 
-Each preset requires matching `.html`, `.css`, `.js`, and `.json` files. Current names are:
+- `standard`;
+- `list`;
+- `chart`;
+- `financial`.
 
-- `standard`
-- `list`
-- `chart`
-- `financial`
+Keep `base.*` compatible with the standard preset.
 
-The generated `ReportTemplate` enum and `Report.templateType` select the preset during report creation. Add new choices through Gonthera and a Flyway migration, then update the Angular selector.
+Add a preset by:
 
-Keep templates self-contained, A4-safe, printable, and editable in the Studio. Prefer CSS/Vue over adding heavy runtime libraries. Validate every example JSON.
+1. adding the generated `ReportTemplate` enum value;
+2. adding a Flyway migration if persisted enum ordinals/values change;
+3. creating all four resource files;
+4. updating backend preset selection;
+5. updating the Angular creation modal;
+6. validating the example JSON and A4 output.
 
+Use printable, self-contained HTML and CSS. Prefer built-in template directives and small helper functions over adding large libraries.
 
-## Enforce subscription plans and API quotas
+Public documentation must describe the supported contract, not the internal rendering technology:
 
-Keep commercial configuration in the admin schema; never hardcode plan prices, limits, descriptions, or display order in Angular.
+- `{{ data.field }}` for interpolation;
+- `v-if` and `v-else` for conditions;
+- `v-for` for lists;
+- `:key`, `:class`, and `:style` for dynamic attributes;
+- named helpers in `script.js`.
 
-- Model catalog, tenant subscription, and monthly usage through Gonthera with default controllers disabled.
-- Seed only initial catalog values through Flyway; treat the database rows as runtime configuration.
-- Default a tenant without an explicit subscription to `FREE`.
-- Count only successful authentication through `X-API-Key` on the integration report-generation flow.
-- Do not count template creation, editing, human JWT previews, or Studio activity.
-- Keep template creation unlimited for every plan.
-- Partition usage by tenant and `YearMonth`, update it transactionally, and lock the existing counter row while incrementing.
-- Return HTTP 402 when a finite monthly quota has already been exhausted.
-- Treat a null quota on a custom plan as negotiated/unlimited until an explicit limit is configured.
-- Perform catalog access under the admin tenant and always restore the previous `TenantContext` in `finally`.
-- Expose a generated DTO/endpoint for catalog and usage data; never expose subscription persistence entities directly.
+Do not advertise the underlying template engine by name.
 
-## Maintain the frontend
+## Maintain the Angular application
 
-Use standalone Angular components and shared CSS tokens such as `--surface`, `--text`, `--border`, and `--primary`. Support both `.app-dark` and light themes and responsive layouts.
+Use standalone components, typed services, and shared theme tokens such as `--surface`, `--text`, `--border`, and `--primary`. Test light, dark, desktop, and mobile states.
 
-Register global providers in `app.config.ts`. Lazy pages cannot depend on component-scoped providers.
-
-Keep one active root HttpClient configuration:
+Keep exactly one root HTTP configuration:
 
 ```ts
 provideHttpClient(withFetch(), withInterceptors([authInterceptor]))
 ```
 
-The interceptor must:
+Ensure the interceptor:
 
-- prefix business URLs with `environment.apiUrl`;
-- attach the JWT cookie;
-- leave `/assets/` and approved external upload URLs local/untouched;
-- clear the client session on 401.
+- prefixes business URLs with `environment.apiUrl`;
+- sends the JWT cookie;
+- leaves `/assets/` and approved external uploads untouched;
+- clears the session on 401.
 
-Logout must clear cookies, `localStorage`, and `sessionStorage`, then navigate with `replaceUrl`. Guards must return booleans or `UrlTree`, not navigate and return `true`.
+Register providers needed by lazy pages at root level. Do not add a second `provideHttpClient`. Keep `MessageService` available to toast consumers.
 
-When generated endpoint outputs wrap data, map the wrapper explicitly in services.
+On logout, clear cookies, `localStorage`, and `sessionStorage`, then navigate with `replaceUrl`.
 
-## Coordinate API and PDF changes
+Use `Intl.NumberFormat` for BRL unless `pt-BR` locale data is explicitly registered with Angular.
 
-The production backend base URL is `https://app.smartverse.com.br/api/smartreport`.
+Current plan UI:
 
-The backend sends complete HTML to `smart-report-core` using `POST http://localhost:5071/report`. Coordinate any route, port, request, response, or PDF behavior change in both projects.
+- Settings keeps the full Free-plan cards and monthly usage.
+- Repository home shows a compact Free banner.
+- Upgrade opens a modal with backend-provided catalog.
+- Consumption history lives at `home/usageHistory`.
+- Checkout and automatic subscription changes are not implemented.
 
-Treat report HTML and JSON as sensitive. Do not log generated documents, API keys, JWTs, or tenant secrets.
+## Maintain the renderer
+
+The backend sends complete HTML to `POST http://localhost:5071/report`. Coordinate any route, port, payload, response, timeout, browser-launch, or PDF behavior change with `smart-report-core`.
+
+Treat template HTML, JSON, and PDF as sensitive. Do not log document content.
+
+Validate core syntax with:
+
+```bash
+node --check index.js
+```
+
+## Maintain the SmartVerse site
+
+Keep product pages static and isolated:
+
+- `site-smartverse/index.html`: institutional ecosystem page;
+- `site-smartverse/church-lite/`: preserved Church Lite landing;
+- `site-smartverse/smart-report/`: SmartReport landing.
+
+Do not rewrite an existing product landing when adding another product. Create a new directory and link it from the institutional catalog. Keep public copy focused on user outcomes and avoid internal implementation details.
+
+## Diagnose common failures
+
+For HTTP 401, verify the `outh` cookie, Authorization header, JWT secret, and interceptor prefixing.
+
+For HTTP 403, inspect the exception body and determine whether it comes from tenant validation, anonymous-route handling, API-key scope, or revoked/expired credentials. Authentication-library JWT failures normally return 401.
+
+For HTTP 402, inspect the active `tenant_subscription`, current `api_monthly_usage`, and configured plan limit.
+
+For wrong Angular URLs, verify there is one root interceptor and that only assets bypass `environment.apiUrl`.
+
+For missing toast providers, verify `MessageService` is root-scoped.
+
+For missing tables, verify Flyway ran against the effective tenant schema and that the migration exists as a deployment artifact.
+
+For stale generated classes, run validate, generate, and clean compile in that order.
+
+For template failures, reproduce with saved example JSON, inspect all four template files, and verify the core is reachable.
 
 ## Validate and hand off
 
-Validate only the affected projects, but include cross-project builds when contracts change:
+Run checks proportional to the change:
 
 ```bash
-# backend
+# backend contract or Java
 mvn gonthera-cli:validate
 mvn -DskipTests clean compile
 
@@ -150,6 +306,12 @@ npm run build
 
 # core
 node --check index.js
+
+# public site
+node --check ecosystem.js
+node --check church-lite/app.js
 ```
 
-Update the root handoff and every affected project handoff after architecture, contract, setup, or workflow changes. Record current behavior, commands, limitations, and the next safe action; remove stale migration notes.
+Use JDK 25 for release validation. A temporary `-Djava.version=17` override may diagnose code in limited environments but must not change the POM.
+
+After architecture, contract, environment, or workflow changes, update the root handoff and each affected project handoff. Record behavior, commands, limitations, deployment assumptions, and the next safe action.

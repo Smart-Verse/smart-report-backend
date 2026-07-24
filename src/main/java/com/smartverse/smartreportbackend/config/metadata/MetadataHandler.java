@@ -1,7 +1,7 @@
 package com.smartverse.smartreportbackend.config.metadata;
 
 import com.smartverse.StarterApplication;
-import com.potatotech.authorization.stereotype.Anonymous;
+import com.smartverse.smartreportbackend_gen.authorization.stereotype.Anonymous;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

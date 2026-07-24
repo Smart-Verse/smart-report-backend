@@ -2,7 +2,7 @@ package com.smartverse.smartreportbackend.services.report;
 
 import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
-import com.potatotech.authorization.tenant.TenantContext;
+import com.smartverse.smartreportbackend_gen.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.common.FileCommon;
 import com.smartverse.smartreportbackend.config.mongo.ConnectionMongoDb;
 import com.smartverse.smartreportbackend.repository.report.ReportCustomRepository;

@@ -1,7 +1,7 @@
 package com.smartverse.smartreportbackend.services.apikey;
 
-import com.potatotech.authorization.exception.ServiceException;
-import com.potatotech.authorization.tenant.TenantContext;
+import com.smartverse.smartreportbackend_gen.authorization.exception.ServiceException;
+import com.smartverse.smartreportbackend_gen.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.config.migration.DBMigration;
 import com.smartverse.smartreportbackend.repository.apikey.ApiKeyCustomRepository;
 import com.smartverse.smartreportbackend_gen.dtos.ApiKeySummaryDTO;

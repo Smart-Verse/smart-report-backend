@@ -1,6 +1,6 @@
 package com.smartverse.smartreportbackend.handlers.beta;
 
-import com.potatotech.authorization.stereotype.Anonymous;
+import com.smartverse.smartreportbackend_gen.authorization.stereotype.Anonymous;
 import com.smartverse.smartreportbackend.services.beta.ParticipateBetaService;
 import com.smartverse.smartreportbackend_gen.endpoints.ParticipateBeta;
 import com.smartverse.smartreportbackend_gen.endpoints.ParticipateBetaInput;

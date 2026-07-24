@@ -1,7 +1,7 @@
 package com.smartverse.smartreportbackend.config.database;
 
-import com.potatotech.authorization.exception.ServiceException;
-import com.potatotech.authorization.tenant.TenantContext;
+import com.smartverse.smartreportbackend_gen.authorization.exception.ServiceException;
+import com.smartverse.smartreportbackend_gen.authorization.tenant.TenantContext;
 
 import com.smartverse.smartreportbackend.config.context.ConfigContextImpl;
 import jakarta.persistence.EntityManager;

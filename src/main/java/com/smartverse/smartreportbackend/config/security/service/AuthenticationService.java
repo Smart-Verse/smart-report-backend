@@ -1,9 +1,9 @@
 package com.smartverse.smartreportbackend.config.security.service;
 
-import com.potatotech.authorization.exception.ServiceException;
-import com.potatotech.authorization.security.Authenticate;
-import com.potatotech.authorization.security.UserSupplier;
-import com.potatotech.authorization.tenant.TenantContext;
+import com.smartverse.smartreportbackend_gen.authorization.exception.ServiceException;
+import com.smartverse.smartreportbackend_gen.authorization.security.Authenticate;
+import com.smartverse.smartreportbackend_gen.authorization.security.UserSupplier;
+import com.smartverse.smartreportbackend_gen.authorization.tenant.TenantContext;
 
 import com.smartverse.smartreportbackend.config.security.model.RegisterDTO;
 import com.smartverse.smartreportbackend.config.security.model.UsersDTO;
@@ -14,6 +14,7 @@ import com.smartverse.smartreportbackend.services.email.EmailService;
 import com.smartverse.smartreportbackend_gen.entities.UserConfirmationEntity;
 import com.smartverse.smartreportbackend_gen.repositories.UserConfirmationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ import java.util.UUID;
 
 @Service
 public class AuthenticationService {
+
+    @Value("${app.frontend.base-url}")
+    private String frontendBaseUrl;
 
     @Autowired
     AuthenticationRepository authenticationRepository;
@@ -58,7 +62,7 @@ public class AuthenticationService {
         usersup.setName(userSupplier.getName());
         usersup.setTenant(userSupplier.getTenant());
         usersup.setEmail(userSupplier.getEmail());
-        usersup.setGroupRoles(Collections.emptyList());
+        usersup.setRoles(Collections.emptyList());
         return usersup;
     }
 
@@ -95,13 +99,15 @@ public class AuthenticationService {
         userConfirmation = userConfirmationRepository.save(userConfirmation);
 
         var emailcontent = emailService.loadModel("register");
-        emailcontent = emailcontent.replace("{{url}}",String.format("http://localhost:4200/#/register-confirmation/%s",userConfirmation.getHash()));
-
-        try{
-            //emailService.sendEmail(user.getEmail(),"Confirmação de email",emailcontent);
-        } catch (Exception e){
-            throw new ServiceException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }
+        emailcontent = emailcontent.replace("{{url}}", String.format(
+                "%s/#/register-confirmation/%s",
+                frontendBaseUrl.replaceAll("/+$", ""),
+                userConfirmation.getHash()));
+        emailService.sendEmail(
+                user.getEmail(),
+                "Confirmação de conta — SmartReport",
+                emailcontent,
+                "account-confirmation/" + userConfirmation.getHash());
 
         return true;
     }

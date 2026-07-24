@@ -1,0 +1,4 @@
+interface:
+  display_name: "Smart Payment Consumer"
+  short_description: "Integre serviços ao Smart Payment com segurança"
+  default_prompt: "Use $smart-payment-consumer para integrar este serviço à criação e confirmação de pagamentos."

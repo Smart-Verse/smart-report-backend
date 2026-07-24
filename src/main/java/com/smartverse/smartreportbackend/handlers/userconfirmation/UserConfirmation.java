@@ -1,6 +1,6 @@
 package com.smartverse.smartreportbackend.handlers.userconfirmation;
 
-import com.potatotech.authorization.stereotype.Anonymous;
+import com.smartverse.smartreportbackend_gen.authorization.stereotype.Anonymous;
 import com.smartverse.smartreportbackend.config.migration.DBMigration;
 import com.smartverse.smartreportbackend.config.security.repository.AuthenticationRepository;
 import com.smartverse.smartreportbackend.repository.userconfirmation.UserConfirmationCustomRepository;

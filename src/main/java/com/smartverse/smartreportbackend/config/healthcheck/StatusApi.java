@@ -1,7 +1,7 @@
 package com.smartverse.smartreportbackend.config.healthcheck;
 
 
-import com.potatotech.authorization.stereotype.Anonymous;
+import com.smartverse.smartreportbackend_gen.authorization.stereotype.Anonymous;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

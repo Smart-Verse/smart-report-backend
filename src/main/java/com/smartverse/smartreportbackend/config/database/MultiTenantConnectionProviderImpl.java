@@ -1,6 +1,6 @@
 package com.smartverse.smartreportbackend.config.database;
 
-import com.potatotech.authorization.tenant.TenantContext;
+import com.smartverse.smartreportbackend_gen.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.config.context.ConfigContextImpl;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;

@@ -1,6 +1,6 @@
 package com.smartverse.smartreportbackend.services.userconfiguration;
 
-import com.potatotech.authorization.tenant.TenantContext;
+import com.smartverse.smartreportbackend_gen.authorization.tenant.TenantContext;
 import com.smartverse.smartreportbackend.config.database.TenantSchemaInterceptor;
 import com.smartverse.smartreportbackend.config.security.repository.AuthenticationRepository;
 import com.smartverse.smartreportbackend_gen.converters.UserConfigurationDTOConverter;

@@ -1,8 +1,8 @@
 package com.smartverse.smartreportbackend.config.security.handler;
 
 
-import com.potatotech.authorization.security.Authenticate;
-import com.potatotech.authorization.stereotype.Anonymous;
+import com.smartverse.smartreportbackend_gen.authorization.security.Authenticate;
+import com.smartverse.smartreportbackend_gen.authorization.stereotype.Anonymous;
 
 import com.smartverse.smartreportbackend.config.security.model.RegisterDTO;
 import com.smartverse.smartreportbackend.config.security.model.UsersDTO;

@@ -18,7 +18,7 @@
 		<spring-cloud.version>2025.0.2</spring-cloud.version>
 		<jjwt.version>0.11.5</jjwt.version>
 		<authorization.version>1.0.2</authorization.version>
-		<gonthera-cli.version>2.0.1</gonthera-cli.version>
+		<gonthera-cli.version>2.1.0</gonthera-cli.version>
 		<springdoc.version>2.8.17</springdoc.version>
 		<lombok.version>1.18.44</lombok.version>
 	</properties>
@@ -33,7 +33,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -96,11 +96,6 @@
 			<artifactId>jjwt-impl</artifactId>
 			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.potatotech</groupId>
-			<artifactId>authorization-backend</artifactId>
-			<version>${authorization.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
