@@ -315,3 +315,33 @@ node --check church-lite/app.js
 Use JDK 25 for release validation. A temporary `-Djava.version=17` override may diagnose code in limited environments but must not change the POM.
 
 After architecture, contract, environment, or workflow changes, update the root handoff and each affected project handoff. Record behavior, commands, limitations, deployment assumptions, and the next safe action.
+
+
+## Current report layout and Studio component library
+
+The report contract supports `pageFormat` and `pageOrientation`:
+
+- formats: `A4`, `A3`, `A5`, `A6`, `LETTER`, `LEGAL`, `TABLOID`, `LEDGER`, `A0`, `A1`, `A2`, `THERMAL_58MM`, `THERMAL_80MM`;
+- orientations: `PORTRAIT` and `LANDSCAPE`;
+- thermal formats are portrait-only and use dynamic document height.
+
+The Angular Studio exposes a right-hand component toolbox. Components are catalogued in `smart-report-frontend/src/app/pages/studio/report-component-catalog.ts`. Insertion writes formatted HTML at the cursor and merges CSS/JavaScript/data examples without overwriting existing JSON keys. Components should remain self-contained, use the supported Vue-compatible directives, and include a useful `data` example whenever they depend on dynamic values. The blank preset is named `BLANK` and contains an empty A4 report with base print CSS and `{}` data.
+
+When adding a preset, update the generated contract through Gonthera, add the four matching files under `models/template`, add the Angular modal option and preview, and compile both projects. Do not expose renderer internals in public copy.
+
+## API report response and frontend consumption
+
+`POST /generateReport` returns JSON with a `report` field containing raw Base64 PDF content (without a `data:application/pdf;base64,` prefix). A browser client must decode it to bytes, create `new Blob([bytes], {type: 'application/pdf'})`, and open or download an object URL. API keys must remain on a trusted backend; public frontend code must never embed `X-API-Key`.
+
+```ts
+const {report} = await response.json();
+const bytes = Uint8Array.from(atob(report), char => char.charCodeAt(0));
+const pdf = new Blob([bytes], {type: 'application/pdf'});
+const url = URL.createObjectURL(pdf);
+window.open(url, '_blank');
+setTimeout(() => URL.revokeObjectURL(url), 60_000);
+```
+
+## SmartVerse public site
+
+`site-smartverse/smart-report` is a static landing page. Product screenshots live in `smart-report/img`, the “Por dentro” section presents the dashboard, creation modal, Studio, API keys and documentation, and screenshots open in an accessible lightbox with keyboard and mobile support. Preserve the SmartReport teal/cyan identity and keep product assets isolated from the root SmartVerse and Church Lite pages. Validate with `node --check site-smartverse/ecosystem.js` after changing shared interactions.
