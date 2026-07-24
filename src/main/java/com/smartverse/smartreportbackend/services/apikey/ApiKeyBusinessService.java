@@ -89,12 +89,21 @@ public class ApiKeyBusinessService extends ApiKeyService {
 
     public AuthenticatedKey authenticate(String plainTextKey) {
         if (plainTextKey == null || !plainTextKey.startsWith(KEY_MARKER)) throw unauthorized();
-        var separator = plainTextKey.indexOf('_', KEY_MARKER.length());
-        if (separator < 0) throw unauthorized();
-        var prefix = plainTextKey.substring(KEY_MARKER.length(), separator);
+        var firstSeparator = plainTextKey.indexOf('_', KEY_MARKER.length());
+        if (firstSeparator < 0) throw unauthorized();
+        var prefix = plainTextKey.substring(KEY_MARKER.length(), firstSeparator);
+        var legacySeparator = plainTextKey.indexOf('_', firstSeparator + 1);
+        var legacyPrefix = legacySeparator < 0 ? null : plainTextKey.substring(KEY_MARKER.length(), legacySeparator);
 
         return inAdminTenant(() -> {
-            var entity = customRepository.findByKeyPrefixAndActiveTrue(prefix).orElseThrow(this::unauthorized);
+            // Chaves atuais usam sr_live_<prefix>_<segredo>. Algumas chaves
+            // emitidas anteriormente usam sr_live_<prefix>_A_<segredo>; o
+            // segundo formato continua válido após a atualização.
+            var entity = customRepository.findByKeyPrefixAndActiveTrue(prefix)
+                    .or(() -> legacyPrefix == null
+                            ? java.util.Optional.empty()
+                            : customRepository.findByKeyPrefixAndActiveTrue(legacyPrefix))
+                    .orElseThrow(this::unauthorized);
             if (!MessageDigest.isEqual(entity.getSecretHash().getBytes(StandardCharsets.US_ASCII),
                     hash(plainTextKey).getBytes(StandardCharsets.US_ASCII))) throw unauthorized();
             if (entity.getExpiresAt() != null && !entity.getExpiresAt().isAfter(LocalDateTime.now())) {
