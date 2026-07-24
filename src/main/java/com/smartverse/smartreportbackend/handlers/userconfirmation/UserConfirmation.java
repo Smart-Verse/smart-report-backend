@@ -3,7 +3,11 @@ package com.smartverse.smartreportbackend.handlers.userconfirmation;
 import com.smartverse.smartreportbackend_gen.authorization.stereotype.Anonymous;
 import com.smartverse.smartreportbackend.config.migration.DBMigration;
 import com.smartverse.smartreportbackend.config.security.repository.AuthenticationRepository;
+import com.smartverse.smartreportbackend.config.security.service.AuthenticationService;
 import com.smartverse.smartreportbackend.repository.userconfirmation.UserConfirmationCustomRepository;
+import com.smartverse.smartreportbackend_gen.endpoints.ResendConfirmation;
+import com.smartverse.smartreportbackend_gen.endpoints.ResendConfirmationInput;
+import com.smartverse.smartreportbackend_gen.endpoints.ResendConfirmationOutput;
 import com.smartverse.smartreportbackend_gen.endpoints.VerifyURL;
 import com.smartverse.smartreportbackend_gen.endpoints.VerifyURLOutput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins="*")
 @RestController
-public class UserConfirmation implements VerifyURL {
+public class UserConfirmation implements VerifyURL, ResendConfirmation {
 
     @Autowired
     UserConfirmationCustomRepository userConfirmationRepository;
@@ -24,6 +28,9 @@ public class UserConfirmation implements VerifyURL {
 
     @Autowired
     DBMigration dbMigration;
+
+    @Autowired
+    AuthenticationService authenticationService;
 
     @Anonymous
     @Override
@@ -45,5 +52,12 @@ public class UserConfirmation implements VerifyURL {
         }
 
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ResendConfirmationOutput> resendConfirmation(ResendConfirmationInput input) {
+        var output = new ResendConfirmationOutput();
+        output.accepted = authenticationService.resendConfirmation(input.email);
+        return ResponseEntity.ok(output);
     }
 }

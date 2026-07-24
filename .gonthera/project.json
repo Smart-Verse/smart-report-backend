@@ -829,6 +829,34 @@
             "nullable": false,
             "key": false
           }
+        },
+        {
+          "comment": "billingCycle",
+          "fieldName": "billingCycle",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "billingCycle",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "expiresAt",
+          "fieldName": "expiresAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
         }
       ],
       "classExtends": ""
@@ -1061,9 +1089,844 @@
         }
       ],
       "classExtends": ""
+    },
+    {
+      "entityName": "billingDiscount",
+      "tableName": "billing_discount",
+      "onlyDTO": false,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "id",
+          "fieldName": "id",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "billingCycle",
+          "fieldName": "billingCycle",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "billingCycle",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "months",
+          "fieldName": "months",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "discountPercentage",
+          "fieldName": "discountPercentage",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "decimal",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "active",
+          "fieldName": "active",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "boolean",
+            "required": true,
+            "valueDefault": "true"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
+    },
+    {
+      "entityName": "subscriptionPayment",
+      "tableName": "subscription_payment",
+      "onlyDTO": false,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "id",
+          "fieldName": "id",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "tenant",
+          "fieldName": "tenant",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "planCode",
+          "fieldName": "planCode",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "billingCycle",
+          "fieldName": "billingCycle",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "billingCycle",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "months",
+          "fieldName": "months",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "baseAmountCents",
+          "fieldName": "baseAmountCents",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "discountPercentage",
+          "fieldName": "discountPercentage",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "decimal",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "amountCents",
+          "fieldName": "amountCents",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "status",
+          "fieldName": "status",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "paymentStatus",
+            "required": true,
+            "valueDefault": "PENDING"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "orderNsu",
+          "fieldName": "orderNsu",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "transactionNsu",
+          "fieldName": "transactionNsu",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "createdAt",
+          "fieldName": "createdAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "updatedAt",
+          "fieldName": "updatedAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "paidAt",
+          "fieldName": "paidAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "coverageStartAt",
+          "fieldName": "coverageStartAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "coverageEndAt",
+          "fieldName": "coverageEndAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
+    },
+    {
+      "entityName": "paymentEventInbox",
+      "tableName": "payment_event_inbox",
+      "onlyDTO": false,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "id",
+          "fieldName": "id",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "paymentId",
+          "fieldName": "paymentId",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "clientId",
+          "fieldName": "clientId",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "orderNsu",
+          "fieldName": "orderNsu",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "transactionNsu",
+          "fieldName": "transactionNsu",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "status",
+          "fieldName": "status",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "failureReason",
+          "fieldName": "failureReason",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "receivedAt",
+          "fieldName": "receivedAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "processedAt",
+          "fieldName": "processedAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "amount",
+          "fieldName": "amount",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "paidAmount",
+          "fieldName": "paidAmount",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "paidAt",
+          "fieldName": "paidAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
+    },
+    {
+      "entityName": "paymentHistoryItem",
+      "tableName": "",
+      "onlyDTO": true,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "id",
+          "fieldName": "id",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "planCode",
+          "fieldName": "planCode",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "billingCycle",
+          "fieldName": "billingCycle",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "billingCycle",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "amountCents",
+          "fieldName": "amountCents",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "status",
+          "fieldName": "status",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "paymentStatus",
+            "required": true,
+            "valueDefault": "PENDING"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "createdAt",
+          "fieldName": "createdAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "paidAt",
+          "fieldName": "paidAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "coverageStartAt",
+          "fieldName": "coverageStartAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        },
+        {
+          "comment": "coverageEndAt",
+          "fieldName": "coverageEndAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": false,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": true,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
+    },
+    {
+      "entityName": "paymentConfirmedEvent",
+      "tableName": "",
+      "onlyDTO": true,
+      "generateDefaultControllers": false,
+      "controllerAbstract": false,
+      "serviceAbstract": false,
+      "entityFields": [
+        {
+          "comment": "paymentId",
+          "fieldName": "paymentId",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": true
+          }
+        },
+        {
+          "comment": "clientId",
+          "fieldName": "clientId",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "uuid",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "service",
+          "fieldName": "service",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "orderNsu",
+          "fieldName": "orderNsu",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "transactionNsu",
+          "fieldName": "transactionNsu",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "string",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "amount",
+          "fieldName": "amount",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "paidAmount",
+          "fieldName": "paidAmount",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "int",
+            "required": true,
+            "valueDefault": "0"
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        },
+        {
+          "comment": "paidAt",
+          "fieldName": "paidAt",
+          "list": false,
+          "fieldProperties": {
+            "fieldType": "datetime",
+            "required": true,
+            "valueDefault": ""
+          },
+          "metadata": {
+            "nullable": false,
+            "key": false
+          }
+        }
+      ],
+      "classExtends": ""
     }
   ],
   "endpoints": [
+    {
+      "methodName": "createPaymentLink",
+      "httpMethod": "POST",
+      "grouper": "",
+      "metadata": {
+        "anonymous": false,
+        "input": [
+          {
+            "parameterName": "planCode",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "billingCycle",
+            "parameterType": "billingCycle",
+            "list": false
+          }
+        ],
+        "output": [
+          {
+            "parameterName": "url",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "orderNsu",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "status",
+            "parameterType": "string",
+            "list": false
+          },
+          {
+            "parameterName": "reused",
+            "parameterType": "boolean",
+            "list": false
+          }
+        ]
+      }
+    },
+    {
+      "methodName": "getPaymentHistory",
+      "httpMethod": "GET",
+      "grouper": "",
+      "metadata": {
+        "anonymous": false,
+        "input": [],
+        "output": [
+          {
+            "parameterName": "payments",
+            "parameterType": "paymentHistoryItem",
+            "list": true
+          }
+        ]
+      }
+    },
+    {
+      "methodName": "resendConfirmation",
+      "httpMethod": "POST",
+      "grouper": "",
+      "metadata": {
+        "anonymous": true,
+        "input": [
+          {
+            "parameterName": "email",
+            "parameterType": "string",
+            "list": false
+          }
+        ],
+        "output": [
+          {
+            "parameterName": "accepted",
+            "parameterType": "boolean",
+            "list": false
+          }
+        ]
+      }
+    },
     {
       "methodName": "revokeApiKey",
       "httpMethod": "POST",
@@ -1431,6 +2294,35 @@
         "CHART",
         "FINANCIAL"
       ]
+    },
+    {
+      "enumName": "billingCycle",
+      "values": [
+        "MONTHLY",
+        "QUARTERLY",
+        "SEMIANNUAL"
+      ]
+    },
+    {
+      "enumName": "paymentStatus",
+      "values": [
+        "PENDING",
+        "PAID",
+        "FAILED",
+        "CANCELLED",
+        "EXPIRED"
+      ]
     }
-  ]
+  ],
+  "messaging": {
+    "RabbitMq": {
+      "pub": [],
+      "sub": [
+        {
+          "name": "paymentConfirmed",
+          "queue": "${PAYMENT_CONFIRMED_QUEUE:smart.payment.confirmed.report}"
+        }
+      ]
+    }
+  }
 }

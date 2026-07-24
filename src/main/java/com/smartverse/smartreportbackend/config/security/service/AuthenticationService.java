@@ -12,8 +12,9 @@ import com.smartverse.smartreportbackend.config.security.repository.Authenticati
 import com.smartverse.smartreportbackend.services.email.EmailService;
 
 import com.smartverse.smartreportbackend_gen.entities.UserConfirmationEntity;
-import com.smartverse.smartreportbackend_gen.repositories.UserConfirmationRepository;
+import com.smartverse.smartreportbackend.repository.userconfirmation.UserConfirmationCustomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,14 @@ import java.util.UUID;
 @Service
 public class AuthenticationService {
 
+    @Value("${app.frontend.base-url:${FRONTEND_BASE_URL:http://localhost:4200}}")
+    private String frontendBaseUrl;
+
     @Autowired
     AuthenticationRepository authenticationRepository;
 
     @Autowired
-    UserConfirmationRepository userConfirmationRepository;
+    UserConfirmationCustomRepository userConfirmationRepository;
 
     @Autowired
     Authenticate authenticate;
@@ -39,12 +43,18 @@ public class AuthenticationService {
 
     public String login(UsersDTO userSupplierDTO){
         TenantContext.setCurrentTenant("admin");
-        var userSupplierEntity = authenticationRepository.findOneByEmail(userSupplierDTO.email());
-        if(userSupplierEntity.isPresent() && new BCryptPasswordEncoder().matches(userSupplierDTO.password(),userSupplierEntity.get().getPassword())){
-            return authenticate.generateToken(setUserSupplier(userSupplierEntity.get()));
-        } else {
-            throw new ServiceException(HttpStatus.UNAUTHORIZED,"User or password invalid");
+        var user = authenticationRepository.findOneByEmail(userSupplierDTO.email())
+                .filter(found -> new BCryptPasswordEncoder()
+                        .matches(userSupplierDTO.password(), found.getPassword()))
+                .orElseThrow(() -> new ServiceException(
+                        HttpStatus.UNAUTHORIZED, "User or password invalid"));
+
+        if (!user.isUserConfirm() || !user.isActive()) {
+            throw new ServiceException(
+                    HttpStatus.FORBIDDEN, "Confirme sua conta antes de fazer login");
         }
+
+        return authenticate.generateToken(setUserSupplier(user));
     }
 
     public UserSupplier validateToken(String token){
@@ -69,10 +79,13 @@ public class AuthenticationService {
             throw new ServiceException(HttpStatus.BAD_REQUEST,"Campos com dados inválidos");
         }
 
-        var email = authenticationRepository.existsByEmail(register.email());
-
-        if(email){
-            throw new ServiceException(HttpStatus.FORBIDDEN,"Ja existe um email cadastrado!");
+        var existingUser = authenticationRepository.findOneByEmail(register.email());
+        if (existingUser.isPresent()) {
+            var user = existingUser.get();
+            if (!user.isUserConfirm() && !user.isActive()) {
+                throw new ServiceException(HttpStatus.CONFLICT, "ACCOUNT_CONFIRMATION_PENDING");
+            }
+            throw new ServiceException(HttpStatus.FORBIDDEN, "Ja existe um email cadastrado!");
         }
 
         var count = authenticationRepository.countAllBy();
@@ -94,15 +107,40 @@ public class AuthenticationService {
         userConfirmation.setHash(UUID.randomUUID().toString());
         userConfirmation = userConfirmationRepository.save(userConfirmation);
 
-        var emailcontent = emailService.loadModel("register");
-        emailcontent = emailcontent.replace("{{url}}",String.format("http://localhost:4200/#/register-confirmation/%s",userConfirmation.getHash()));
-
-        try{
-            //emailService.sendEmail(user.getEmail(),"Confirmação de email",emailcontent);
-        } catch (Exception e){
-            throw new ServiceException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }
+        sendConfirmationEmail(user.getEmail(), userConfirmation.getHash());
 
         return true;
+    }
+
+
+    @Transactional
+    public boolean resendConfirmation(String email) {
+        if (email == null || email.isBlank()) {
+            return true;
+        }
+
+        authenticationRepository.findOneByEmail(email).ifPresent(user -> {
+            if (user.isUserConfirm() || user.isActive()) {
+                return;
+            }
+
+            var confirmation = userConfirmationRepository.findByUserId(user.getId())
+                    .orElseGet(UserConfirmationEntity::new);
+            confirmation.setUserId(user.getId());
+            confirmation.setHash(UUID.randomUUID().toString());
+            confirmation = userConfirmationRepository.save(confirmation);
+            sendConfirmationEmail(user.getEmail(), confirmation.getHash());
+        });
+        return true;
+    }
+
+    private void sendConfirmationEmail(String email, String token) {
+        var confirmationUrl = String.format(
+                "%s/user-confirmation/%s",
+                frontendBaseUrl.replaceAll("/+$", ""),
+                token);
+        var emailContent = emailService.loadModel("register")
+                .replace("{{url}}", confirmationUrl);
+        emailService.sendEmail(email, "Confirmação de email", emailContent, token);
     }
 }

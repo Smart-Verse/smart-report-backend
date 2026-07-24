@@ -51,7 +51,8 @@ public class ApplicationAuthenticationFlow extends Authenticate {
 
         if (uri.startsWith(servicePath + "/authenticate")
                 || uri.startsWith(servicePath + "/register")
-                || uri.startsWith(servicePath + "/verifyURL")) {
+                || uri.startsWith(servicePath + "/verifyURL")
+                || uri.startsWith(servicePath + "/resendConfirmation")) {
             activateTenant(ADMIN_TENANT);
             return true;
         }

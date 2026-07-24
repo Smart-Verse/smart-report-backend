@@ -7,9 +7,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Primary
 @Repository
 public interface UserConfirmationCustomRepository extends UserConfirmationRepository {
     Optional<UserConfirmationEntity> findByHash(String hash);
+
+    Optional<UserConfirmationEntity> findByUserId(UUID userId);
 }

@@ -1,17 +1,20 @@
 package com.smartverse.smartreportbackend.services.plan;
 
+import com.smartverse.smartreportbackend.config.migration.DBMigration;
+import com.smartverse.smartreportbackend.repository.payment.SubscriptionPaymentCustomRepository;
+import com.smartverse.smartreportbackend.repository.plan.*;
 import com.smartverse.smartreportbackend_gen.authorization.exception.ServiceException;
 import com.smartverse.smartreportbackend_gen.authorization.tenant.TenantContext;
-import com.smartverse.smartreportbackend.config.migration.DBMigration;
-import com.smartverse.smartreportbackend.repository.plan.*;
 import com.smartverse.smartreportbackend_gen.dtos.ApiUsageHistoryItemDTO;
 import com.smartverse.smartreportbackend_gen.dtos.PlanOptionDTO;
 import com.smartverse.smartreportbackend_gen.endpoints.GetApiUsageHistoryOutput;
 import com.smartverse.smartreportbackend_gen.endpoints.GetPlanOverviewOutput;
 import com.smartverse.smartreportbackend_gen.entities.*;
+import com.smartverse.smartreportbackend_gen.enums.PaymentStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
+
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.function.Supplier;
@@ -24,17 +27,20 @@ public class PlanBusinessService {
     private final SubscriptionPlanCustomRepository plans;
     private final TenantSubscriptionCustomRepository subscriptions;
     private final ApiMonthlyUsageCustomRepository usages;
+    private final SubscriptionPaymentCustomRepository payments;
     private final DBMigration migration;
     private final TransactionTemplate transactions;
 
     public PlanBusinessService(SubscriptionPlanCustomRepository plans,
                                TenantSubscriptionCustomRepository subscriptions,
                                ApiMonthlyUsageCustomRepository usages,
+                               SubscriptionPaymentCustomRepository payments,
                                DBMigration migration,
                                TransactionTemplate transactions) {
         this.plans = plans;
         this.subscriptions = subscriptions;
         this.usages = usages;
+        this.payments = payments;
         this.migration = migration;
         this.transactions = transactions;
     }
@@ -54,8 +60,7 @@ public class PlanBusinessService {
                         item.period = usage.getPeriod();
                         item.amount = usage.getAmount();
                         return item;
-                    })
-                    .toList();
+                    }).toList();
             return output;
         }));
     }
@@ -82,10 +87,20 @@ public class PlanBusinessService {
         }));
     }
 
+    public void expireSubscriptions() {
+        inAdmin(() -> transactions.execute(status -> {
+            var now = LocalDateTime.now();
+            subscriptions.findAllByExpiresAtLessThanEqual(now)
+                    .forEach(subscription -> synchronize(subscription, now));
+            return null;
+        }));
+    }
+
     private GetPlanOverviewOutput buildOverview(String tenant) {
         var current = currentPlan(tenant);
         var period = YearMonth.now().toString();
-        var used = usages.findByTenantAndPeriod(tenant, period).map(ApiMonthlyUsageEntity::getAmount).orElse(0);
+        var used = usages.findByTenantAndPeriod(tenant, period)
+                .map(ApiMonthlyUsageEntity::getAmount).orElse(0);
         var output = new GetPlanOverviewOutput();
         output.currentPlan = toDTO(current, true);
         output.plans = plans.findAllByActiveTrueOrderByDisplayOrderAsc().stream()
@@ -93,8 +108,7 @@ public class PlanBusinessService {
                 .toList();
         output.apiUsed = used;
         output.apiRemaining = current.getApiMonthlyLimit() == null
-                ? null
-                : Math.max(0, current.getApiMonthlyLimit() - used);
+                ? null : Math.max(0, current.getApiMonthlyLimit() - used);
         return output;
     }
 
@@ -106,9 +120,34 @@ public class PlanBusinessService {
             created.setStartedAt(LocalDateTime.now());
             return subscriptions.save(created);
         });
+        synchronize(subscription, LocalDateTime.now());
         return plans.findByCodeAndActiveTrue(subscription.getPlanCode())
                 .orElseThrow(() -> new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
                         "Subscription plan is not configured"));
+    }
+
+    private void synchronize(TenantSubscriptionEntity subscription, LocalDateTime now) {
+        if (subscription.getExpiresAt() == null || subscription.getExpiresAt().isAfter(now)) return;
+        var next = payments.findAllByTenantAndStatusOrderByCoverageEndAtDesc(
+                        subscription.getTenant(), PaymentStatus.PAID).stream()
+                .filter(payment -> payment.getCoverageStartAt() != null
+                        && !payment.getCoverageStartAt().isAfter(now)
+                        && payment.getCoverageEndAt() != null
+                        && payment.getCoverageEndAt().isAfter(now))
+                .findFirst();
+        if (next.isPresent()) {
+            var payment = next.get();
+            subscription.setPlanCode(payment.getPlanCode());
+            subscription.setBillingCycle(payment.getBillingCycle());
+            subscription.setStartedAt(payment.getCoverageStartAt());
+            subscription.setExpiresAt(payment.getCoverageEndAt());
+        } else {
+            subscription.setPlanCode(DEFAULT_PLAN);
+            subscription.setBillingCycle(null);
+            subscription.setStartedAt(now);
+            subscription.setExpiresAt(null);
+        }
+        subscriptions.save(subscription);
     }
 
     private PlanOptionDTO toDTO(SubscriptionPlanEntity plan, boolean current) {
