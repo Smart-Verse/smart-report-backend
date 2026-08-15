@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service
@@ -145,19 +144,14 @@ public class ReportService extends com.smartverse.smartreportbackend_gen.service
         var gson = new Gson();
 
         var functions = templateProperties.js.split("function");
-
-        var fns = new AtomicReference<String>();
-        fns.set("");
-        Arrays.stream(functions).parallel().forEach(function -> {
-            if(!function.isEmpty()){
-                //fns.getAndSet(function.replace("function","") + ",");
-                fns.set(fns.get() + function.replace("function","") + ",");
-            }
-        });
+        var fns = new StringBuilder();
+        Arrays.stream(functions)
+                .filter(function -> !function.isBlank())
+                .forEach(function -> fns.append(function).append(','));
 
         template = template
                 .replace("${css}", templateProperties.css)
-                .replace("${js}", fns.get())
+                .replace("${js}", fns.toString())
                 .replace("${html}", templateProperties.html)
                 .replace("${json}", (data == null ? templateProperties.data : gson.toJson(data)));
 
