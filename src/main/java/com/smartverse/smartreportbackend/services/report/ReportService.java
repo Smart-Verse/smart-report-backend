@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -143,15 +145,19 @@ public class ReportService extends com.smartverse.smartreportbackend_gen.service
 
         var gson = new Gson();
 
-        var functions = templateProperties.js.split("function");
-        var fns = new StringBuilder();
-        Arrays.stream(functions)
-                .filter(function -> !function.isBlank())
-                .forEach(function -> fns.append(function).append(','));
+        var script = Objects.requireNonNullElse(templateProperties.js, "");
+        var functionMatcher = Pattern.compile(
+                "\\bfunction\\s+([A-Za-z_$][A-Za-z0-9_$]*)\\s*\\(")
+                .matcher(script);
+        var methods = functionMatcher.results()
+                .map(result -> result.group(1))
+                .distinct()
+                .collect(Collectors.joining(","));
 
         template = template
                 .replace("${css}", templateProperties.css)
-                .replace("${js}", fns.toString())
+                .replace("${js}", script)
+                .replace("${methods}", methods)
                 .replace("${html}", templateProperties.html)
                 .replace("${json}", (data == null ? templateProperties.data : gson.toJson(data)));
 
